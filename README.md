@@ -41,10 +41,10 @@
 
 | Metric | Value |
 |--------|-------|
-| Knowledge base entries | 513+ material keywords |
+| Knowledge base entries | 513+ material keywords (auto-built from 3 sources) |
 | Construction categories | 8 (Civil, Electrical, Plumbing, HVAC, Firefighting, Finishing, External, Other) |
-| Ontology keywords | ~234 across 7 categories |
-| Seed materials (graph) | 40 with 150+ synonyms |
+| Ontology keywords | 272 across 7 categories |
+| Seed materials (graph) | 40 with 205 synonyms (grows via AI learning loop) |
 | Classification layers | 4 (EPC → Ontology → Graph → Gemini AI) |
 
 ---
@@ -759,6 +759,46 @@ Score = sum of triggered risk points (capped at 100)
 ```
 
 Each flag includes a `recommendation` field with actionable guidance.
+
+---
+
+## Performance
+
+| Operation | Typical Time | Notes |
+|-----------|-------------|-------|
+| Rule-based extraction (`/extract`) | ~1-3 seconds | No external API calls. Processes all sheets locally. |
+| AI-enhanced extraction (`/upload-excel`) | ~8-15 seconds | Depends on uncategorized item count and Gemini response time. |
+| Analytics (`/analyze`) | < 100ms | In-memory computation only. |
+| Risk assessment (`/risk`) | < 100ms | In-memory computation only. |
+| Material lookup build (startup) | ~200ms | 513+ entries compiled from 3 knowledge sources on server start. |
+
+### Scaling Characteristics
+
+- **File size**: Tested with BOQ files up to 10 MB, 6+ sheets, 600+ raw rows
+- **Material lookup**: O(n) scan per description, mitigated by longest-match-first ordering
+- **Deduplication**: O(n²) fuzzy comparison — works well for typical BOQ sizes (< 500 items)
+- **AI calls**: Chunked at 8000 chars with 500-char overlap to stay within Gemini token limits
+
+---
+
+## Limitations
+
+| Limitation | Impact | Workaround |
+|-----------|--------|------------|
+| **Tabular BOQ format required** | Complex merged-cell layouts may lose data during pandas parsing | Pre-process heavily merged files in Excel before upload |
+| **Keyword-based matching** | Unusual or abbreviated material names may not match the knowledge base | Add new keywords to `boq_ontology.json` or rely on Gemini (L4) to learn them |
+| **No cost/price intelligence** | The system extracts quantities but does not compute costs | Cost analysis requires rate columns which vary by region and contractor |
+| **Single-language support** | English-only material matching and classification | Translations would require parallel keyword lists in each language |
+| **Gemini free tier limits** | AI extraction may fail under heavy usage (429 quota errors) | System gracefully falls back to rule-based extraction; upgrade to paid tier for production |
+| **No multi-user persistence** | Knowledge graph is stored as a local JSON file | For production: migrate to a database (PostgreSQL + JSONB) |
+| **No authentication** | API is open, no user sessions or role-based access | Add JWT/OAuth middleware for production deployment |
+
+### What This System Does NOT Do
+
+- Does **not** generate cost estimates or pricing
+- Does **not** connect to supplier databases
+- Does **not** replace human BOQ review — it accelerates the first-pass extraction
+- Does **not** handle scanned/image PDFs (only structured Excel files)
 
 ---
 
