@@ -27,14 +27,22 @@ export default function App() {
       const data = await BoqService.extract(file);
       setResults(data);
 
-      // Step 2: Analyze
+      // Step 2: Analyze (independent — failure doesn't block risk)
       if (data.items && data.items.length > 0) {
-        const analytics = await BoqService.analyze(data.items);
-        setAnalyticsData(analytics);
+        try {
+          const analytics = await BoqService.analyze(data.items);
+          setAnalyticsData(analytics);
+        } catch (analyticsErr) {
+          console.warn('Analytics failed (non-critical):', analyticsErr);
+        }
 
-        // Step 3: Risk assessment
-        const risk = await BoqService.getRisk(data.items);
-        setRiskData(risk);
+        // Step 3: Risk assessment (independent — failure doesn't block results)
+        try {
+          const risk = await BoqService.getRisk(data.items);
+          setRiskData(risk);
+        } catch (riskErr) {
+          console.warn('Risk scoring failed (non-critical):', riskErr);
+        }
       }
     } catch (err) {
       console.error('Upload failed:', err);
@@ -72,7 +80,13 @@ export default function App() {
                 <span className="font-medium">{results.total_sheets}</span> sheets
               </p>
               <button
-                onClick={() => { setResults(null); setError(null); }}
+                onClick={() => {
+                  setResults(null);
+                  setError(null);
+                  setActiveCategory(null);
+                  setAnalyticsData(null);
+                  setRiskData(null);
+                }}
                 className="text-sm text-blue-600 hover:text-blue-800 font-medium"
               >
                 Upload New File
