@@ -3,7 +3,6 @@ from app.config.settings import EPC_CATEGORY_RULES
 from app.services.ontology_mapper import map_to_category
 from app.services.graph_matcher import match_material
 
-
 def classify_category(product: str) -> str:
     """4-layer classification pipeline for BOQ items.
 

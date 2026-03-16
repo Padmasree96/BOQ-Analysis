@@ -5,282 +5,1295 @@
     {
       "name": "Power Wiring",
       "category": "Electrical",
-      "synonyms": ["power cable", "LT cable", "electrical wiring", "wiring and plugs", "power wiring and plugs", "internal wiring", "point wiring"],
+      "synonyms": [
+        "power cable",
+        "LT cable",
+        "electrical wiring",
+        "wiring and plugs",
+        "power wiring and plugs",
+        "internal wiring",
+        "point wiring"
+      ],
       "typical_unit": "m",
       "source": "seed"
     },
     {
       "name": "Lightning Conductor",
       "category": "Electrical",
-      "synonyms": ["lightning arrester", "lightning protection", "lightning rod", "lightning conductors"],
+      "synonyms": [
+        "lightning arrester",
+        "lightning protection",
+        "lightning rod",
+        "lightning conductors"
+      ],
       "typical_unit": "set",
       "source": "seed"
     },
     {
       "name": "IT Conduit",
       "category": "Electrical",
-      "synonyms": ["IT & telephone conduit", "telephone conduit", "data conduit", "IT conduits", "communication conduit"],
+      "synonyms": [
+        "IT & telephone conduit",
+        "telephone conduit",
+        "data conduit",
+        "IT conduits",
+        "communication conduit"
+      ],
       "typical_unit": "m",
       "source": "seed"
     },
     {
       "name": "XLPE Armoured Cable",
       "category": "Electrical",
-      "synonyms": ["XLPE cable", "armoured cable", "power cable", "LT XLPE cable", "HT XLPE cable"],
+      "synonyms": [
+        "XLPE cable",
+        "armoured cable",
+        "power cable",
+        "LT XLPE cable",
+        "HT XLPE cable"
+      ],
       "typical_unit": "m",
       "source": "seed"
     },
     {
       "name": "Cable Tray",
       "category": "Electrical",
-      "synonyms": ["cable tray system", "perforated cable tray", "ladder type cable tray", "cable ladder", "cable raceway"],
+      "synonyms": [
+        "cable tray system",
+        "perforated cable tray",
+        "ladder type cable tray",
+        "cable ladder",
+        "cable raceway"
+      ],
       "typical_unit": "m",
       "source": "seed"
     },
     {
       "name": "Distribution Board",
       "category": "Electrical",
-      "synonyms": ["DB", "panel board", "distribution panel", "switch board", "MCCB panel", "MCB board"],
+      "synonyms": [
+        "DB",
+        "panel board",
+        "distribution panel",
+        "switch board",
+        "MCCB panel",
+        "MCB board"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "LED Light Fitting",
       "category": "Electrical",
-      "synonyms": ["LED light", "LED luminaire", "LED fixture", "LED downlight", "LED panel light", "LED tube light", "light fitting"],
+      "synonyms": [
+        "LED light",
+        "LED luminaire",
+        "LED fixture",
+        "LED downlight",
+        "LED panel light",
+        "LED tube light",
+        "light fitting"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "Public Address System",
       "category": "Electrical",
-      "synonyms": ["PA system", "public address", "sound system", "announcement system", "audio system"],
+      "synonyms": [
+        "PA system",
+        "public address",
+        "sound system",
+        "announcement system",
+        "audio system"
+      ],
       "typical_unit": "set",
       "source": "seed"
     },
     {
       "name": "PPR Pipe",
       "category": "Plumbing & Drainage",
-      "synonyms": ["polypropylene pipe", "PPR piping", "hot water pipe PPR", "green pipe"],
+      "synonyms": [
+        "polypropylene pipe",
+        "PPR piping",
+        "hot water pipe PPR",
+        "green pipe"
+      ],
       "typical_unit": "m",
       "source": "seed"
     },
     {
       "name": "HDPE Pipe",
       "category": "Plumbing & Drainage",
-      "synonyms": ["high density polyethylene pipe", "HDPE piping", "PE pipe", "polyethylene pipe"],
+      "synonyms": [
+        "high density polyethylene pipe",
+        "HDPE piping",
+        "PE pipe",
+        "polyethylene pipe"
+      ],
       "typical_unit": "m",
       "source": "seed"
     },
     {
       "name": "uPVC Pipe",
       "category": "Plumbing & Drainage",
-      "synonyms": ["unplasticized PVC pipe", "uPVC piping", "PVC pipe", "SWR pipe", "uPVC SWR"],
+      "synonyms": [
+        "unplasticized PVC pipe",
+        "uPVC piping",
+        "PVC pipe",
+        "SWR pipe",
+        "uPVC SWR"
+      ],
       "typical_unit": "m",
       "source": "seed"
     },
     {
       "name": "GI Pipe",
       "category": "Plumbing & Drainage",
-      "synonyms": ["galvanized iron pipe", "GI piping", "galvanised pipe", "GI tube"],
+      "synonyms": [
+        "galvanized iron pipe",
+        "GI piping",
+        "galvanised pipe",
+        "GI tube"
+      ],
       "typical_unit": "m",
       "source": "seed"
     },
     {
       "name": "Water Supply Piping",
       "category": "Plumbing & Drainage",
-      "synonyms": ["water supply line", "water main", "water distribution", "internal water supply", "domestic water supply"],
+      "synonyms": [
+        "water supply line",
+        "water main",
+        "water distribution",
+        "internal water supply",
+        "domestic water supply"
+      ],
       "typical_unit": "m",
       "source": "seed"
     },
     {
       "name": "Ball Valve",
       "category": "Plumbing & Drainage",
-      "synonyms": ["ball cock", "shut off valve", "isolation valve"],
+      "synonyms": [
+        "ball cock",
+        "shut off valve",
+        "isolation valve"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "Water Tank",
       "category": "Plumbing & Drainage",
-      "synonyms": ["overhead tank", "OHT", "underground tank", "UGT", "storage tank", "water reservoir"],
+      "synonyms": [
+        "overhead tank",
+        "OHT",
+        "underground tank",
+        "UGT",
+        "storage tank",
+        "water reservoir"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "Submersible Pump",
       "category": "Plumbing & Drainage",
-      "synonyms": ["submersible motor pump", "borewell pump", "sump pump", "submersible pumpset"],
+      "synonyms": [
+        "submersible motor pump",
+        "borewell pump",
+        "sump pump",
+        "submersible pumpset"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "Sanitary Fixture",
       "category": "Plumbing & Drainage",
-      "synonyms": ["WC", "water closet", "wash basin", "urinal", "commode", "toilet", "sanitary ware"],
+      "synonyms": [
+        "WC",
+        "water closet",
+        "wash basin",
+        "urinal",
+        "commode",
+        "toilet",
+        "sanitary ware"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "RCC Work",
       "category": "Civil & Structural",
-      "synonyms": ["reinforced cement concrete", "RCC", "concrete work", "PCC work", "plain cement concrete"],
+      "synonyms": [
+        "reinforced cement concrete",
+        "RCC",
+        "concrete work",
+        "PCC work",
+        "plain cement concrete"
+      ],
       "typical_unit": "cum",
       "source": "seed"
     },
     {
       "name": "Structural Steel",
       "category": "Civil & Structural",
-      "synonyms": ["steel structure", "MS structure", "steel fabrication", "structural fabrication", "steel framework"],
+      "synonyms": [
+        "steel structure",
+        "MS structure",
+        "steel fabrication",
+        "structural fabrication",
+        "steel framework"
+      ],
       "typical_unit": "kg",
       "source": "seed"
     },
     {
       "name": "TMT Reinforcement Bar",
       "category": "Civil & Structural",
-      "synonyms": ["TMT bar", "rebar", "reinforcement steel", "TMT steel", "Fe500", "Fe500D", "tor steel"],
+      "synonyms": [
+        "TMT bar",
+        "rebar",
+        "reinforcement steel",
+        "TMT steel",
+        "Fe500",
+        "Fe500D",
+        "tor steel"
+      ],
       "typical_unit": "kg",
       "source": "seed"
     },
     {
       "name": "Brick Masonry",
       "category": "Civil & Structural",
-      "synonyms": ["brickwork", "brick wall", "masonry work", "block masonry", "AAC block", "fly ash brick"],
+      "synonyms": [
+        "brickwork",
+        "brick wall",
+        "masonry work",
+        "block masonry",
+        "AAC block",
+        "fly ash brick"
+      ],
       "typical_unit": "cum",
       "source": "seed"
     },
     {
       "name": "MS Grating",
       "category": "Civil & Structural",
-      "synonyms": ["mild steel grating", "floor grating", "trench grating", "drain grating", "GI grating"],
+      "synonyms": [
+        "mild steel grating",
+        "floor grating",
+        "trench grating",
+        "drain grating",
+        "GI grating"
+      ],
       "typical_unit": "sqm",
       "source": "seed"
     },
     {
       "name": "Waterproofing",
       "category": "Civil & Structural",
-      "synonyms": ["waterproofing treatment", "membrane waterproofing", "APP membrane", "bituminous waterproofing", "crystalline waterproofing"],
+      "synonyms": [
+        "waterproofing treatment",
+        "membrane waterproofing",
+        "APP membrane",
+        "bituminous waterproofing",
+        "crystalline waterproofing"
+      ],
       "typical_unit": "sqm",
       "source": "seed"
     },
     {
       "name": "Fire Alarm System",
       "category": "Firefighting",
-      "synonyms": ["automatic fire alarm", "fire detection system", "fire alarm panel", "fire alarm network", "fire alarm installation"],
+      "synonyms": [
+        "automatic fire alarm",
+        "fire detection system",
+        "fire alarm panel",
+        "fire alarm network",
+        "fire alarm installation"
+      ],
       "typical_unit": "set",
       "source": "seed"
     },
     {
       "name": "Fire Sprinkler",
       "category": "Firefighting",
-      "synonyms": ["sprinkler system", "automatic sprinkler", "fire sprinkler system", "sprinkler head", "pendant sprinkler"],
+      "synonyms": [
+        "sprinkler system",
+        "automatic sprinkler",
+        "fire sprinkler system",
+        "sprinkler head",
+        "pendant sprinkler"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "Fire Hydrant",
       "category": "Firefighting",
-      "synonyms": ["hydrant system", "fire hydrant system", "hydrant valve", "landing valve", "fire hydrant installation"],
+      "synonyms": [
+        "hydrant system",
+        "fire hydrant system",
+        "hydrant valve",
+        "landing valve",
+        "fire hydrant installation"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "Fire Pump Set",
       "category": "Firefighting",
-      "synonyms": ["fire pump", "jockey pump", "fire fighting pump", "main fire pump", "fire pump house"],
+      "synonyms": [
+        "fire pump",
+        "jockey pump",
+        "fire fighting pump",
+        "main fire pump",
+        "fire pump house"
+      ],
       "typical_unit": "set",
       "source": "seed"
     },
     {
       "name": "Air Handling Unit",
       "category": "HVAC",
-      "synonyms": ["AHU", "air handler", "central AHU", "double skin AHU", "AHU unit"],
+      "synonyms": [
+        "AHU",
+        "air handler",
+        "central AHU",
+        "double skin AHU",
+        "AHU unit"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "Fan Coil Unit",
       "category": "HVAC",
-      "synonyms": ["FCU", "fan coil", "ceiling mounted FCU", "concealed FCU", "cassette unit"],
+      "synonyms": [
+        "FCU",
+        "fan coil",
+        "ceiling mounted FCU",
+        "concealed FCU",
+        "cassette unit"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "Chiller",
       "category": "HVAC",
-      "synonyms": ["water cooled chiller", "air cooled chiller", "scroll chiller", "screw chiller", "chiller plant"],
+      "synonyms": [
+        "water cooled chiller",
+        "air cooled chiller",
+        "scroll chiller",
+        "screw chiller",
+        "chiller plant"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "GI Ductwork",
       "category": "HVAC",
-      "synonyms": ["GI duct", "galvanized duct", "sheet metal duct", "HVAC duct", "supply air duct", "return air duct"],
+      "synonyms": [
+        "GI duct",
+        "galvanized duct",
+        "sheet metal duct",
+        "HVAC duct",
+        "supply air duct",
+        "return air duct"
+      ],
       "typical_unit": "kg",
       "source": "seed"
     },
     {
       "name": "Exhaust Fan",
       "category": "HVAC",
-      "synonyms": ["exhaust ventilator", "axial fan", "centrifugal fan", "ventilation fan", "roof exhaust fan"],
+      "synonyms": [
+        "exhaust ventilator",
+        "axial fan",
+        "centrifugal fan",
+        "ventilation fan",
+        "roof exhaust fan"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "Vitrified Floor Tile",
       "category": "Finishing & Interior",
-      "synonyms": ["vitrified tile", "floor tile", "polished vitrified tile", "double charge tile", "GVT tile"],
+      "synonyms": [
+        "vitrified tile",
+        "floor tile",
+        "polished vitrified tile",
+        "double charge tile",
+        "GVT tile"
+      ],
       "typical_unit": "sqm",
       "source": "seed"
     },
     {
       "name": "False Ceiling",
       "category": "Finishing & Interior",
-      "synonyms": ["suspended ceiling", "gypsum ceiling", "grid ceiling", "mineral fibre ceiling", "metal ceiling", "POP ceiling"],
+      "synonyms": [
+        "suspended ceiling",
+        "gypsum ceiling",
+        "grid ceiling",
+        "mineral fibre ceiling",
+        "metal ceiling",
+        "POP ceiling"
+      ],
       "typical_unit": "sqm",
       "source": "seed"
     },
     {
       "name": "Interior Paint",
       "category": "Finishing & Interior",
-      "synonyms": ["wall paint", "emulsion paint", "acrylic emulsion", "interior emulsion", "premium emulsion", "painting work"],
+      "synonyms": [
+        "wall paint",
+        "emulsion paint",
+        "acrylic emulsion",
+        "interior emulsion",
+        "premium emulsion",
+        "painting work"
+      ],
       "typical_unit": "sqm",
       "source": "seed"
     },
     {
       "name": "Aluminium Door",
       "category": "Finishing & Interior",
-      "synonyms": ["aluminium door frame", "aluminium swing door", "aluminium sliding door", "powder coated door"],
+      "synonyms": [
+        "aluminium door frame",
+        "aluminium swing door",
+        "aluminium sliding door",
+        "powder coated door"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "Aluminium Window",
       "category": "Finishing & Interior",
-      "synonyms": ["aluminium window frame", "aluminium sliding window", "aluminium casement window", "powder coated window"],
+      "synonyms": [
+        "aluminium window frame",
+        "aluminium sliding window",
+        "aluminium casement window",
+        "powder coated window"
+      ],
       "typical_unit": "nos",
       "source": "seed"
     },
     {
       "name": "Road Work",
       "category": "External Works",
-      "synonyms": ["internal road", "asphalt road", "bituminous road", "road construction", "road pavement"],
+      "synonyms": [
+        "internal road",
+        "asphalt road",
+        "bituminous road",
+        "road construction",
+        "road pavement"
+      ],
       "typical_unit": "sqm",
       "source": "seed"
     },
     {
       "name": "Boundary Wall",
       "category": "External Works",
-      "synonyms": ["compound wall", "perimeter wall", "boundary fencing", "security wall"],
+      "synonyms": [
+        "compound wall",
+        "perimeter wall",
+        "boundary fencing",
+        "security wall"
+      ],
       "typical_unit": "rmt",
       "source": "seed"
     },
     {
       "name": "Landscaping",
       "category": "External Works",
-      "synonyms": ["landscape work", "garden development", "softscape", "hardscape", "planting work", "turfing"],
+      "synonyms": [
+        "landscape work",
+        "garden development",
+        "softscape",
+        "hardscape",
+        "planting work",
+        "turfing"
+      ],
       "typical_unit": "sqm",
       "source": "seed"
+    },
+    {
+      "name": "Transformer",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.560389+00:00"
+    },
+    {
+      "name": "Earthing",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.578742+00:00"
+    },
+    {
+      "name": "Bus Duct",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.593651+00:00"
+    },
+    {
+      "name": "Cable",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.607772+00:00"
+    },
+    {
+      "name": "Panel",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.623652+00:00"
+    },
+    {
+      "name": "Duct",
+      "category": "HVAC",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.637052+00:00"
+    },
+    {
+      "name": "Grass",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.651718+00:00"
+    },
+    {
+      "name": "Road",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.664735+00:00"
+    },
+    {
+      "name": "Aggregate",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.683882+00:00"
+    },
+    {
+      "name": "Stone",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.697912+00:00"
+    },
+    {
+      "name": "Emulsion",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.712288+00:00"
+    },
+    {
+      "name": "Bitumen",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.726810+00:00"
+    },
+    {
+      "name": "Concrete",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.740160+00:00"
+    },
+    {
+      "name": "Cement",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.753855+00:00"
+    },
+    {
+      "name": "Primer",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.769247+00:00"
+    },
+    {
+      "name": "Road Marking",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.789454+00:00"
+    },
+    {
+      "name": "Paint",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.802681+00:00"
+    },
+    {
+      "name": "Shuttering",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.816155+00:00"
+    },
+    {
+      "name": "Plaster",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.831436+00:00"
+    },
+    {
+      "name": "Precast",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.846157+00:00"
+    },
+    {
+      "name": "Sand",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.858856+00:00"
+    },
+    {
+      "name": "Painting",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.872763+00:00"
+    },
+    {
+      "name": "Kerb",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.885365+00:00"
+    },
+    {
+      "name": "Block",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.901306+00:00"
+    },
+    {
+      "name": "Reinforcement",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.914574+00:00"
+    },
+    {
+      "name": "Binding Wire",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.930314+00:00"
+    },
+    {
+      "name": "Steel",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.940990+00:00"
+    },
+    {
+      "name": "Wire",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.960540+00:00"
+    },
+    {
+      "name": "Scaffolding",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.975940+00:00"
+    },
+    {
+      "name": "Distemper",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:35.991600+00:00"
+    },
+    {
+      "name": "Putty",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.006033+00:00"
+    },
+    {
+      "name": "Enamel",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.022312+00:00"
+    },
+    {
+      "name": "Drainage",
+      "category": "Plumbing & Drainage",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.037733+00:00"
+    },
+    {
+      "name": "Manhole",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.051487+00:00"
+    },
+    {
+      "name": "Sewer",
+      "category": "Plumbing & Drainage",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.067367+00:00"
+    },
+    {
+      "name": "Flooring",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.082782+00:00"
+    },
+    {
+      "name": "Flange",
+      "category": "Plumbing & Drainage",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.096606+00:00"
+    },
+    {
+      "name": "Valve",
+      "category": "Plumbing & Drainage",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.108392+00:00"
+    },
+    {
+      "name": "Gate",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.122089+00:00"
+    },
+    {
+      "name": "Street Light",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.141389+00:00"
+    },
+    {
+      "name": "Foundation",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.155571+00:00"
+    },
+    {
+      "name": "Base Plate",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.167414+00:00"
+    },
+    {
+      "name": "Light",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.177890+00:00"
+    },
+    {
+      "name": "Epoxy",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.191239+00:00"
+    },
+    {
+      "name": "Door",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.204105+00:00"
+    },
+    {
+      "name": "Pole",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.215873+00:00"
+    },
+    {
+      "name": "Mcb",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.226459+00:00"
+    },
+    {
+      "name": "Conduit",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T17:43:36.239100+00:00"
+    },
+    {
+      "name": "Sub Station Building",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.614363+00:00"
+    },
+    {
+      "name": "Levelling and Filling of site Levelling of the entire plot by cutting and filling to the required formation levels as",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.638372+00:00"
+    },
+    {
+      "name": "Providing, laying, spreading and compacting graded stone aggregate (size range 53 mm to 0.075 mm ) to wet mix macadam",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.654621+00:00"
+    },
+    {
+      "name": "prime coat using slow setting bitumen emulsion",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.672481+00:00"
+    },
+    {
+      "name": "tack coat over WMM using bitumen emulsion rapid setting",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.690708+00:00"
+    },
+    {
+      "name": "tack coat over DBM using bitumen emulsion rapid setting",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.711890+00:00"
+    },
+    {
+      "name": "Bituminous Concrete on prepared surface with specified graded stone aggregate for wearing course",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.728385+00:00"
+    },
+    {
+      "name": "2.5 mm thick road marking strips (retro reflective) of specified shade / colour using hot thermoplastic material by",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.745215+00:00"
+    },
+    {
+      "name": "dry lean cement concrete sub base over a prepared sub-grade with coarse and fine aggregate",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.762840+00:00"
+    },
+    {
+      "name": "in position bitumen hot sealing compound for expansion joints.",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.777450+00:00"
+    },
+    {
+      "name": "Providng and fixing at and near ground level precast cement concrete 1:2:4 in kerbs",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.794218+00:00"
+    },
+    {
+      "name": "Painting runway/taxi track/apron/kerb stone marking",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.804861+00:00"
+    },
+    {
+      "name": "60 mm thick factory made cement concrete interlocking paver block of M-30 grade made",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.824597+00:00"
+    },
+    {
+      "name": "80 mm thick factory made cement concrete interlocking paver block of M-35 grade made by block making machines",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.841948+00:00"
+    },
+    {
+      "name": "in position Reinforced Cement Concrete (RCC) of grade M-30 using 20mm maximum size aggregates and crushed sand of",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.855959+00:00"
+    },
+    {
+      "name": "Reinforcement Steel for reinforced cement concrete including supplying",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.881570+00:00"
+    },
+    {
+      "name": "Structural steel work in M.S Plain Plates",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.891124+00:00"
+    },
+    {
+      "name": "in position 100 mm thick factory made machine batched & machine mixed Precast RCC Rectangular Covers on drains of",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.920517+00:00"
+    },
+    {
+      "name": "with two coats with oil bound distemper of approved make and manufacturer over new work to give an even approved shade",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.939890+00:00"
+    },
+    {
+      "name": "two coats of synthetic enamel paint on steel surfaces of approved brand and manufacture to give an even shade over a",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.951440+00:00"
+    },
+    {
+      "name": "Storm water drainage system",
+      "category": "Plumbing & Drainage",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.973449+00:00"
+    },
+    {
+      "name": "Applying stamping finish to the top surface of freshly laid plain/reinforced cement concrete of specified grade in",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:13.999448+00:00"
+    },
+    {
+      "name": "outside open screw & yoke type Gate valves of Nominal Dia 200mm",
+      "category": "Plumbing & Drainage",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:14.017527+00:00"
+    },
+    {
+      "name": "Gate valves, should confirm to ANSI B 16.34/ IS:14846. Gate valves are of DI (ductile iron) contruction",
+      "category": "Plumbing & Drainage",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:14.033528+00:00"
+    },
+    {
+      "name": "air release valve of nominal size 50mm Supply",
+      "category": "Plumbing & Drainage",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:14.081624+00:00"
+    },
+    {
+      "name": "Street Light Poles",
+      "category": "External Works",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:14.097282+00:00"
+    },
+    {
+      "name": "of 48 core armoured single mode fiber optic cable by digging trench of 1 meter depth and 40 cm width. Cable shall be",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:12:14.117154+00:00"
+    },
+    {
+      "name": "Preamble - External works All the items of work shall be treated as supply",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.207833+00:00"
+    },
+    {
+      "name": "5 WAY RMU with Full DAS - 2 LBS & 3 VCB, 2OD",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.223873+00:00"
+    },
+    {
+      "name": "Unloading, Receiving, Storing, Shifting to place of installation",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.255413+00:00"
+    },
+    {
+      "name": "Total - Section II : Transformers Section III : LT Panels All OUTDOOR IP55 panels shall be of BOTTOM cable entry &",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.275769+00:00"
+    },
+    {
+      "name": "LT Metering Box with CT and KWH as per BESCOM approved Make. The CT & KWH Meter provision",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.291538+00:00"
+    },
+    {
+      "name": "Total - Section III : LT Panels Section IV : Cables and end terminations HT CABLES Supply and laying of 11KV (E) Grade",
+      "category": "HVAC",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.318085+00:00"
+    },
+    {
+      "name": "LT CABLES 2XWY : XLPE insulated Copper conductor",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.330135+00:00"
+    },
+    {
+      "name": "LT Cables - Copper as Conductor 4C x 10 Sq.mm-2XFY / 2XWY End Termination 3C x 2.5 Sq.mm-2XFY / 2XWY (For Landscape",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.358753+00:00"
+    },
+    {
+      "name": "Total - Section IV : Cables and end terminations Section V : External Light Fixtures Rate of installation shall include",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.374274+00:00"
+    },
+    {
+      "name": "Excavation & back filling for laying street lighting cable for 0.3Mtr wide and 0.3 to 0.45 meter depth",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.403325+00:00"
+    },
+    {
+      "name": "Total - Section V : External Light Fixtures Section VI : Earth Electrodes and Earth Strips Accessories: Welding for GI",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.417981+00:00"
+    },
+    {
+      "name": "COPPER PLATE",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.439475+00:00"
+    },
+    {
+      "name": "EARTH STRIPS Earth strip below ground shall be laid in excavated trench. Rate to include excavation of earth",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.467070+00:00"
+    },
+    {
+      "name": "50 x 6 mm GI strip hot dip galvanized (For RMU, Transformer, DGs, LTKs & Looping)",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.480164+00:00"
+    },
+    {
+      "name": "8 SWG GI wire Total - Section VI : Earth Electrodes and Earth Strips Section VII : Hume Pipe and Civil related works",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.497920+00:00"
+    },
+    {
+      "name": "100 mm dia., NP2 Cable Inspection Chamber with Cover 1.2mtr x 1.2mtr x 1.5 to 2.0mtr (D)",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.519896+00:00"
+    },
+    {
+      "name": "Fire Bucket with stand - 2 buckets. Bucket of round bottom",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "Set",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.528734+00:00"
+    },
+    {
+      "name": "Mechanical Foam extinguishers of 9 litres capacity should be provided near the transformer & DG yard.",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.547998+00:00"
+    },
+    {
+      "name": "ABC powder extinguishers of 6 kgs. Capacity should be provided near the transformer & DG yard.",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.569053+00:00"
+    },
+    {
+      "name": "Supply and laying of 2mm thick FRLS PVC conduits with necessary accessories",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.592886+00:00"
+    },
+    {
+      "name": "32mm Professional charges towards preparation of drawings",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "LS",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-14T18:57:12.612463+00:00"
     }
   ]
 }

@@ -11,8 +11,16 @@ def clean_dataframe_structure(df: pd.DataFrame) -> pd.DataFrame:
     # Reset index
     df = df.reset_index(drop=True)
 
-    # Convert all column names to strings
-    df.columns = [str(c).strip() for c in df.columns]
+    # Convert all column names to strings, deduplicate
+    cols = [str(c).strip() for c in df.columns]
+    seen = {}
+    for i, c in enumerate(cols):
+        if c in seen:
+            seen[c] += 1
+            cols[i] = f"{c}_{seen[c]}"
+        else:
+            seen[c] = 0
+    df.columns = cols
 
     # Strip whitespace from string cells
     for col in df.columns:

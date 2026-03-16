@@ -23,8 +23,8 @@ export default function App() {
     setActiveCategory(null);
 
     try {
-      // Step 1: Extract materials
-      const data = await BoqService.extract(file);
+      // Step 1: Extract materials via LangGraph 6-agent pipeline
+      const data = await BoqService.extractLangGraph(file);
       setResults(data);
 
       // Step 2: Analyze (independent — failure doesn't block risk)

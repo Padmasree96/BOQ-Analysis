@@ -6,9 +6,9 @@ def fuzzy_match(query: str, choices: List[str], threshold: int = 70) -> Optional
     """Return the best fuzzy match from choices, or None if below threshold."""
     if not query or not choices:
         return None
-    result = process.extractOne(query, choices, scorer=fuzz.token_sort_ratio)
+    result = process.extractOne(query.lower(), [c.lower() for c in choices], scorer=fuzz.token_sort_ratio)
     if result and result[1] >= threshold:
-        return result[0]
+        return choices[result[2]]
     return None
 
 
@@ -18,9 +18,9 @@ def fuzzy_match_with_score(
     """Return (best_match, score) or None if below threshold."""
     if not query or not choices:
         return None
-    result = process.extractOne(query, choices, scorer=fuzz.token_sort_ratio)
+    result = process.extractOne(query.lower(), [c.lower() for c in choices], scorer=fuzz.token_sort_ratio)
     if result and result[1] >= threshold:
-        return (result[0], result[1])
+        return (choices[result[2]], result[1])
     return None
 
 

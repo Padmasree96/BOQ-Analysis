@@ -69,7 +69,7 @@ export default function DataTable({ items, activeCategory }) {
           <tbody className="divide-y divide-slate-100">
             {filtered.map((item, idx) => (
               <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                <td className="px-5 py-3 text-slate-700 max-w-xs truncate" title={item.description}>
+                <td className="px-5 py-3 text-slate-700 max-w-md break-words whitespace-normal">
                   {item.description}
                 </td>
                 <td className="px-5 py-3 text-slate-500">{item.brand}</td>
