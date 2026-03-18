@@ -1,93 +1,147 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Package } from 'lucide-react';
+import { Package, Search } from 'lucide-react';
 
-const CATEGORY_BADGES = {
-  'Civil & Structural': 'bg-amber-100 text-amber-700',
-  'Plumbing & Drainage': 'bg-blue-100 text-blue-700',
-  'Electrical': 'bg-yellow-100 text-yellow-700',
-  'HVAC': 'bg-cyan-100 text-cyan-700',
-  'Firefighting': 'bg-red-100 text-red-700',
-  'Finishing & Interior': 'bg-purple-100 text-purple-700',
-  'External Works': 'bg-green-100 text-green-700',
-  'Other': 'bg-slate-100 text-slate-700',
-  'Uncategorized': 'bg-gray-100 text-gray-600',
+const CATEGORY_COLORS = {
+  'Civil & Structural':    '#2563eb',
+  'Plumbing & Drainage':   '#0891b2',
+  'Electrical':            '#d97706',
+  'HVAC':                  '#0d9488',
+  'Firefighting':          '#dc2626',
+  'Finishing & Interior':  '#7c3aed',
+  'External Works':        '#16a34a',
+  'Mechanical & HVAC':     '#0d9488',
+  'Fire Protection':       '#dc2626',
+  'Other':                 '#64748b',
+  'Uncategorized':         '#94a3b8',
 };
 
-export default function DataTable({ items, activeCategory }) {
-  const filtered = activeCategory
+function getCatColor(cat) {
+  if (!cat) return '#94a3b8';
+  for (const [key, color] of Object.entries(CATEGORY_COLORS)) {
+    if (cat.toLowerCase().includes(key.split(' ')[0].toLowerCase())) return color;
+  }
+  return '#64748b';
+}
+
+export default function DataTable({
+  items,
+  activeCategory,
+  title = 'Materials',
+  emptyMessage = 'No items to display',
+}) {
+  const [search, setSearch] = useState('');
+
+  let filtered = activeCategory
     ? items.filter(i => i.category === activeCategory)
     : items;
 
-  if (!filtered || filtered.length === 0) {
+  if (search.trim()) {
+    const q = search.toLowerCase();
+    filtered = filtered.filter(i =>
+      (i.description || '').toLowerCase().includes(q) ||
+      (i.category || '').toLowerCase().includes(q) ||
+      (i.brand || '').toLowerCase().includes(q)
+    );
+  }
+
+  if (!items || items.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-        <Package className="w-10 h-10 mx-auto text-slate-300 mb-3" />
-        <p className="text-slate-400 text-sm">No items to display</p>
+      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-16 text-center">
+        <Package size={48} className="mx-auto mb-4 text-slate-200" />
+        <p className="text-sm text-slate-400">{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="bg-white rounded-xl border border-slate-200 overflow-hidden"
-    >
-      <div className="px-5 py-3 border-b border-slate-100 flex justify-between items-center">
-        <h3 className="text-sm font-semibold text-slate-700">
-          Item-Level BOQ
-          {activeCategory && (
-            <span className="text-xs font-normal text-slate-400 ml-2">
-              Filtered: {activeCategory}
-            </span>
-          )}
-        </h3>
-        <span className="text-xs text-slate-400">{filtered.length} items</span>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+      className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+
+      {/* Header */}
+      <div className="px-6 py-4 flex items-center justify-between gap-4 border-b border-slate-200 bg-slate-50">
+        <div>
+          <h3 className="text-base font-semibold text-slate-800">
+            {title}
+            {activeCategory && (
+              <span className="ml-2 text-sm font-normal text-slate-400">
+                — {activeCategory}
+              </span>
+            )}
+          </h3>
+          <p className="text-xs text-slate-400 mt-0.5">{filtered.length} items</p>
+        </div>
+
+        {/* Search */}
+        <div className="relative w-64">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search materials..."
+            className="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+          />
+        </div>
       </div>
 
-      <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 sticky top-0">
-            <tr>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                BOQ Item
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                Brand
-              </th>
-              <th className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                Quantity
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                Unit
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                Category
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {filtered.map((item, idx) => (
-              <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                <td className="px-5 py-3 text-slate-700 max-w-md break-words whitespace-normal">
-                  {item.description}
-                </td>
-                <td className="px-5 py-3 text-slate-500">{item.brand}</td>
-                <td className="px-5 py-3 text-right font-mono text-slate-700">
-                  {Number(item.quantity).toLocaleString()}
-                </td>
-                <td className="px-5 py-3 text-slate-500">{item.unit}</td>
-                <td className="px-5 py-3">
-                  <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium
-                    ${CATEGORY_BADGES[item.category] || 'bg-gray-100 text-gray-600'}`}>
-                    {item.category}
-                  </span>
-                </td>
+      {filtered.length === 0 ? (
+        <div className="p-16 text-center">
+          <p className="text-sm text-slate-400">No items match your search.</p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
+          <table className="w-full">
+            <thead className="sticky top-0 z-10 bg-white border-b border-slate-200">
+              <tr>
+                {[
+                  { label: '#',        align: 'left',  w: 'w-12' },
+                  { label: 'Description', align: 'left',  w: '' },
+                  { label: 'Brand',    align: 'left',  w: 'w-32' },
+                  { label: 'Quantity', align: 'right', w: 'w-28' },
+                  { label: 'Unit',     align: 'left',  w: 'w-20' },
+                  { label: 'Category', align: 'left',  w: 'w-40' },
+                ].map(h => (
+                  <th key={h.label}
+                    className={`px-5 py-3.5 text-xs font-semibold text-slate-400 uppercase tracking-wider ${h.w} ${h.align === 'right' ? 'text-right' : 'text-left'}`}>
+                    {h.label}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filtered.map((item, idx) => {
+                const catColor = getCatColor(item.category);
+                return (
+                  <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-5 py-4 text-sm text-slate-400 font-medium">{idx + 1}</td>
+                    <td className="px-5 py-4 text-slate-800 font-medium max-w-md">
+                      <span className="text-sm leading-relaxed">{item.description}</span>
+                    </td>
+                    <td className="px-5 py-4 text-sm text-slate-500">
+                      {item.brand || <span className="text-slate-300">—</span>}
+                    </td>
+                    <td className="px-5 py-4 text-right font-mono text-sm font-semibold text-slate-700">
+                      {item.quantity != null
+                        ? Number(item.quantity).toLocaleString()
+                        : <span className="text-slate-300 font-normal">TBD</span>}
+                    </td>
+                    <td className="px-5 py-4 text-sm text-slate-500">
+                      {item.unit || <span className="text-slate-300">—</span>}
+                    </td>
+                    <td className="px-5 py-4">
+                      <span className="inline-block px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap"
+                        style={{ background: catColor + '12', color: catColor }}>
+                        {item.category || 'General'}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </motion.div>
   );
 }
