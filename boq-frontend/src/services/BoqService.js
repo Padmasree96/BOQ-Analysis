@@ -126,7 +126,7 @@ const BoqService = {
   /** Attach or remove JWT from all requests */
   setAuthToken,
 
-  /** Register a new engineer account */
+  /** Register a new engineer account (local fallback) */
   register: async ({ email, password, fullName, company = '' }) => {
     const response = await api.post('/auth/register', {
       email,
@@ -137,7 +137,7 @@ const BoqService = {
     return response.data;
   },
 
-  /** Log in and receive a JWT token */
+  /** Log in and receive a JWT token (local fallback) */
   login: async ({ email, password }) => {
     const response = await api.post('/auth/login', { email, password });
     return response.data;
@@ -147,6 +147,23 @@ const BoqService = {
   getMe: async (token) => {
     const response = await api.get('/auth/me', {
       headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
+
+  /** Get engineer profile */
+  getEngineerProfile: async () => {
+    const response = await api.get('/auth/profile');
+    return response.data;
+  },
+
+  /** Update engineer profile */
+  updateEngineerProfile: async ({ fullName, company, phone, designation }) => {
+    const response = await api.put('/auth/profile', {
+      full_name: fullName,
+      company,
+      phone,
+      designation,
     });
     return response.data;
   },
