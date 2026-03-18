@@ -67,7 +67,7 @@ def extract_with_ai(raw_text: str, industry: str = "construction") -> Dict:
 
     try:
         llm = ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash",
+            model="gemini-2.5-flash",
             google_api_key=GOOGLE_API_KEY,
             temperature=0.1,
             max_retries=1,

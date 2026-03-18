@@ -26,7 +26,6 @@ from loguru import logger
 from dotenv import load_dotenv
 
 from langgraph.graph import StateGraph, END
-
 load_dotenv()
 
 # ── Optional imports — degrade gracefully ──────────────────────
@@ -411,7 +410,7 @@ def agent_extractor(state: BOQState) -> dict:
     if HAS_LANGCHAIN and GOOGLE_API_KEY:
         try:
             llm = ChatGoogleGenerativeAI(
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash",
                 google_api_key=GOOGLE_API_KEY,
                 temperature=0.1,
                 max_retries=1,

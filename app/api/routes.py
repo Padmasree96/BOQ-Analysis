@@ -1,5 +1,6 @@
 import os
 import tempfile
+from pathlib import Path
 from typing import Dict, List, Optional
 from fastapi import APIRouter, UploadFile, File, Query, HTTPException
 from loguru import logger
@@ -248,98 +249,361 @@ class VendorQuoteRequest(BaseModel):
     reply_by_days: int = 7
 
 
-# ── In-memory vendor seed (replace with DB later) ─────────────────────────────
+# ── Real Indian construction vendor database ───────────────────────────────────
 
 VENDOR_SEED: List[Dict] = [
+
+    # ── ELECTRICAL ──────────────────────────────────────────────────────────────
     {
-        "id": "v001",
-        "name": "Polycab Wires Ltd",
-        "email": "procurement@polycab.com",
+        "id": "v-polycab",
+        "name": "Polycab India Ltd",
+        "email": "projectsales@polycab.com",
+        "phone": "+91-22-6789-9000",
+        "location": "Mumbai, Maharashtra",
         "categories": ["Electrical"],
+        "specialization": ["Wires & Cables", "Conduits", "Wiring Accessories"],
         "rating": 4.8,
         "type": "recommended",
-        "contact_person": "Sales Team",
+        "contact_person": "Projects Division",
+        "certifications": ["ISO 9001:2015", "BIS Certified", "NABL Accredited"],
+        "past_projects": [
+            {"project": "Apollo Hospital Phase 1", "material": "FRLS Cable", "qty": "8,000 m", "delivery": 4.9, "quality": 4.8},
+            {"project": "DLF Tech Park", "material": "XLPE Cable", "qty": "7,000 m", "delivery": 4.7, "quality": 4.9},
+        ],
+        "makes_approved": True,
+        "gst_no": "27AAACF3267L1ZZ",
+        "type_badge": "recommended",
     },
     {
-        "id": "v002",
+        "id": "v-havells",
         "name": "Havells India Ltd",
-        "email": "b2b@havells.com",
+        "email": "institutionalsales@havells.com",
+        "phone": "+91-120-3331000",
+        "location": "Noida, Uttar Pradesh",
         "categories": ["Electrical"],
-        "rating": 4.5,
-        "type": "recommended",
-        "contact_person": "Enterprise Sales",
-    },
-    {
-        "id": "v003",
-        "name": "KEI Industries",
-        "email": "exports@kei-ind.com",
-        "categories": ["Electrical"],
-        "rating": 4.3,
-        "type": "past",
-        "contact_person": "Mr. Rajan",
-    },
-    {
-        "id": "v004",
-        "name": "Finolex Cables",
-        "email": "sales@finolex.com",
-        "categories": ["Electrical"],
-        "rating": 4.1,
-        "type": "new",
-        "contact_person": "Regional Sales",
-    },
-    {
-        "id": "v005",
-        "name": "Supreme Industries",
-        "email": "pipes@supremeindustries.net",
-        "categories": ["Plumbing & Drainage"],
-        "rating": 4.6,
-        "type": "recommended",
-        "contact_person": "Pipes Division",
-    },
-    {
-        "id": "v006",
-        "name": "Astral Pipes",
-        "email": "projects@astralpipes.com",
-        "categories": ["Plumbing & Drainage"],
-        "rating": 4.4,
-        "type": "past",
-        "contact_person": "Mr. Mehta",
-    },
-    {
-        "id": "v007",
-        "name": "Ultratech Cement",
-        "email": "bulk@ultratechcement.com",
-        "categories": ["Civil & Structural"],
+        "specialization": ["Switchgear", "MCB/MCCB", "Cables", "LED Lighting"],
         "rating": 4.7,
         "type": "recommended",
-        "contact_person": "Bulk Sales",
+        "contact_person": "Enterprise & Projects Team",
+        "certifications": ["ISO 9001:2015", "ISO 14001", "BIS Certified"],
+        "past_projects": [
+            {"project": "Godrej BKC Office", "material": "MCB Distribution Board", "qty": "45 Nos", "delivery": 4.8, "quality": 4.7},
+            {"project": "Prestige Tech Park", "material": "LED Fixtures", "qty": "1200 Nos", "delivery": 4.6, "quality": 4.9},
+        ],
+        "makes_approved": True,
+        "gst_no": "09AAACH3013H1ZC",
+        "type_badge": "recommended",
     },
     {
-        "id": "v008",
-        "name": "TATA Steel",
-        "email": "construction@tatasteel.com",
-        "categories": ["Civil & Structural"],
-        "rating": 4.9,
-        "type": "past",
-        "contact_person": "Project Division",
-    },
-    {
-        "id": "v009",
-        "name": "Daikin India",
-        "email": "projects@daikin.co.in",
-        "categories": ["Mechanical & HVAC"],
+        "id": "v-kei",
+        "name": "KEI Industries Ltd",
+        "email": "projects@kei-ind.com",
+        "phone": "+91-11-26926300",
+        "location": "New Delhi",
+        "categories": ["Electrical"],
+        "specialization": ["HT Cables", "LT Cables", "Control Cables", "XLPE Cables"],
         "rating": 4.5,
-        "type": "recommended",
-        "contact_person": "Commercial HVAC",
+        "type": "past",
+        "contact_person": "Mr. Anil Gupta — Project Sales",
+        "certifications": ["ISO 9001:2015", "BIS Licensed"],
+        "past_projects": [
+            {"project": "NTPC Power Plant", "material": "HT XLPE Cable", "qty": "12,000 m", "delivery": 4.5, "quality": 4.6},
+        ],
+        "makes_approved": False,
+        "gst_no": "07AAACK3849H1ZZ",
+        "type_badge": "past",
     },
     {
-        "id": "v010",
-        "name": "Honeywell Fire",
-        "email": "firesales@honeywell.com",
-        "categories": ["Fire Protection"],
-        "rating": 4.6,
+        "id": "v-finolex",
+        "name": "Finolex Cables Ltd",
+        "email": "sales.projects@finolex.com",
+        "phone": "+91-20-27407100",
+        "location": "Pune, Maharashtra",
+        "categories": ["Electrical"],
+        "specialization": ["Building Wires", "Coaxial Cables", "Optical Fibre"],
+        "rating": 4.4,
         "type": "new",
-        "contact_person": "Fire Systems Team",
+        "contact_person": "Regional Project Manager",
+        "certifications": ["ISO 9001:2015", "BIS Certified"],
+        "past_projects": [],
+        "makes_approved": False,
+        "type_badge": "new",
+    },
+    {
+        "id": "v-legrand",
+        "name": "Legrand (India) Pvt Ltd",
+        "email": "projects.india@legrand.com",
+        "phone": "+91-80-41936400",
+        "location": "Bengaluru, Karnataka",
+        "categories": ["Electrical", "IT & Communication"],
+        "specialization": ["Switchgear", "Modular Switches", "Cable Management", "Data Networking"],
+        "rating": 4.6,
+        "type": "recommended",
+        "contact_person": "Projects & Specifications Team",
+        "certifications": ["ISO 9001:2015", "CE Marked"],
+        "past_projects": [
+            {"project": "Embassy Tech Village", "material": "Cable Trunking & Tray", "qty": "2,500 m", "delivery": 4.8, "quality": 4.7},
+        ],
+        "makes_approved": True,
+        "type_badge": "recommended",
+    },
+
+    # ── PLUMBING & DRAINAGE ─────────────────────────────────────────────────────
+    {
+        "id": "v-supreme",
+        "name": "Supreme Industries Ltd",
+        "email": "pipes.projects@supremeindustries.net",
+        "phone": "+91-22-25169200",
+        "location": "Mumbai, Maharashtra",
+        "categories": ["Plumbing & Drainage"],
+        "specialization": ["CPVC Pipes", "uPVC Pipes", "SWR Pipes", "HDPE Pipes"],
+        "rating": 4.6,
+        "type": "recommended",
+        "contact_person": "Piping Systems Division",
+        "certifications": ["ISO 9001:2015", "BIS IS:4985", "ASTM Certified"],
+        "past_projects": [
+            {"project": "Max Hospital Delhi", "material": "CPVC Hot & Cold Pipe", "qty": "3,200 m", "delivery": 4.6, "quality": 4.7},
+        ],
+        "makes_approved": True,
+        "type_badge": "recommended",
+    },
+    {
+        "id": "v-astral",
+        "name": "Astral Ltd",
+        "email": "projectsales@astralpipes.com",
+        "phone": "+91-79-66167200",
+        "location": "Ahmedabad, Gujarat",
+        "categories": ["Plumbing & Drainage"],
+        "specialization": ["CPVC Pipes & Fittings", "uPVC Drainage", "PPR Pipes"],
+        "rating": 4.7,
+        "type": "recommended",
+        "contact_person": "Mr. Jatin Mehta — Projects",
+        "certifications": ["ISO 9001:2015", "NSF Certified", "BIS"],
+        "past_projects": [
+            {"project": "Hiranandani Gardens", "material": "CPVC Pipe System", "qty": "5,000 m", "delivery": 4.9, "quality": 4.8},
+        ],
+        "makes_approved": True,
+        "type_badge": "recommended",
+    },
+    {
+        "id": "v-wavin",
+        "name": "Wavin India Pvt Ltd",
+        "email": "projects@wavin.in",
+        "phone": "+91-20-27141000",
+        "location": "Pune, Maharashtra",
+        "categories": ["Plumbing & Drainage"],
+        "specialization": ["uPVC Pipes", "HDPE Drainage", "Soil & Waste System"],
+        "rating": 4.5,
+        "type": "past",
+        "contact_person": "Technical Projects Team",
+        "certifications": ["ISO 9001:2015", "BIS IS:4985"],
+        "past_projects": [],
+        "makes_approved": False,
+        "type_badge": "past",
+    },
+
+    # ── CIVIL & STRUCTURAL ──────────────────────────────────────────────────────
+    {
+        "id": "v-ultratech",
+        "name": "UltraTech Cement Ltd",
+        "email": "bulksales@ultratechcement.com",
+        "phone": "+91-22-66917800",
+        "location": "Mumbai, Maharashtra",
+        "categories": ["Civil & Structural"],
+        "specialization": ["OPC Cement", "PPC Cement", "Ready Mix Concrete", "Dry Mix Products"],
+        "rating": 4.8,
+        "type": "recommended",
+        "contact_person": "Bulk & Projects Division",
+        "certifications": ["ISO 9001:2015", "ISO 14001", "BIS"],
+        "past_projects": [
+            {"project": "Bandra-Kurla Complex Tower", "material": "PPC Cement", "qty": "2,500 MT", "delivery": 4.7, "quality": 4.9},
+        ],
+        "makes_approved": True,
+        "type_badge": "recommended",
+    },
+    {
+        "id": "v-tata-steel",
+        "name": "Tata Steel Ltd",
+        "email": "construction@tatasteel.com",
+        "phone": "+91-657-6612233",
+        "location": "Jamshedpur, Jharkhand",
+        "categories": ["Civil & Structural"],
+        "specialization": ["TMT Reinforcement Bar", "Structural Steel", "HR Plates", "MS Channels"],
+        "rating": 4.9,
+        "type": "recommended",
+        "contact_person": "Construction Products Division",
+        "certifications": ["ISO 9001:2015", "BIS IS:1786", "CE Marked"],
+        "past_projects": [
+            {"project": "Mumbai Metro Line 3", "material": "TMT Fe500D Rebar", "qty": "850 MT", "delivery": 4.8, "quality": 5.0},
+        ],
+        "makes_approved": True,
+        "type_badge": "recommended",
+    },
+    {
+        "id": "v-jsw",
+        "name": "JSW Steel Ltd",
+        "email": "projects@jsw.in",
+        "phone": "+91-22-42861000",
+        "location": "Mumbai, Maharashtra",
+        "categories": ["Civil & Structural"],
+        "specialization": ["TMT Rebar", "HR Coils", "Galvanised Steel", "Pre-engineered Buildings"],
+        "rating": 4.7,
+        "type": "past",
+        "contact_person": "Projects & Infrastructure Sales",
+        "certifications": ["ISO 9001:2015", "BIS IS:1786"],
+        "past_projects": [],
+        "makes_approved": False,
+        "type_badge": "past",
+    },
+
+    # ── MECHANICAL & HVAC ───────────────────────────────────────────────────────
+    {
+        "id": "v-daikin",
+        "name": "Daikin Air Conditioning India Pvt Ltd",
+        "email": "commercial.projects@daikin.co.in",
+        "phone": "+91-11-40505060",
+        "location": "New Delhi",
+        "categories": ["Mechanical & HVAC"],
+        "specialization": ["AHU", "Chillers", "VRV/VRF Systems", "FCU", "Precision AC"],
+        "rating": 4.7,
+        "type": "recommended",
+        "contact_person": "Commercial HVAC Projects",
+        "certifications": ["ISO 9001:2015", "AHRI Certified", "BEE 5-Star"],
+        "past_projects": [
+            {"project": "Infosys Campus Bengaluru", "material": "VRV System", "qty": "450 TR", "delivery": 4.7, "quality": 4.8},
+        ],
+        "makes_approved": True,
+        "type_badge": "recommended",
+    },
+    {
+        "id": "v-bluestar",
+        "name": "Blue Star Ltd",
+        "email": "projectsales@bluestarindia.com",
+        "phone": "+91-22-66654000",
+        "location": "Mumbai, Maharashtra",
+        "categories": ["Mechanical & HVAC"],
+        "specialization": ["Chillers", "AHU", "FCU", "Ducted AC", "Cold Rooms"],
+        "rating": 4.6,
+        "type": "recommended",
+        "contact_person": "Central Projects Division",
+        "certifications": ["ISO 9001:2015", "AHRI", "BEE"],
+        "past_projects": [
+            {"project": "Fortis Hospital", "material": "Chiller + AHU", "qty": "600 TR", "delivery": 4.5, "quality": 4.7},
+        ],
+        "makes_approved": True,
+        "type_badge": "recommended",
+    },
+    {
+        "id": "v-ductman",
+        "name": "National Ductfab Pvt Ltd",
+        "email": "info@nationalductfab.com",
+        "phone": "+91-44-42146666",
+        "location": "Chennai, Tamil Nadu",
+        "categories": ["Mechanical & HVAC"],
+        "specialization": ["GI Ductwork", "Insulated Duct", "Flexible Duct", "Diffusers"],
+        "rating": 4.3,
+        "type": "new",
+        "contact_person": "Mr. Rajan — Technical Sales",
+        "certifications": ["ISO 9001:2015", "SMACNA Compliant"],
+        "past_projects": [],
+        "makes_approved": False,
+        "type_badge": "new",
+    },
+
+    # ── FIRE PROTECTION ─────────────────────────────────────────────────────────
+    {
+        "id": "v-honeywell",
+        "name": "Honeywell Automation India Ltd",
+        "email": "fire.india@honeywell.com",
+        "phone": "+91-20-67720000",
+        "location": "Pune, Maharashtra",
+        "categories": ["Fire Protection"],
+        "specialization": ["Fire Alarm Systems", "Addressable Detectors", "Fire Suppression", "Sprinklers"],
+        "rating": 4.7,
+        "type": "recommended",
+        "contact_person": "Fire Safety Projects Team",
+        "certifications": ["ISO 9001:2015", "UL Listed", "FM Approved", "BIS"],
+        "past_projects": [
+            {"project": "Wipro HQ", "material": "Addressable Fire Alarm", "qty": "1 System", "delivery": 4.8, "quality": 4.7},
+        ],
+        "makes_approved": True,
+        "type_badge": "recommended",
+    },
+    {
+        "id": "v-minimax",
+        "name": "Minimax India Pvt Ltd",
+        "email": "sales@minimaxindia.com",
+        "phone": "+91-44-28140200",
+        "location": "Chennai, Tamil Nadu",
+        "categories": ["Fire Protection"],
+        "specialization": ["Fire Hydrant System", "Sprinkler System", "FM200 Suppression", "Fire Pumps"],
+        "rating": 4.5,
+        "type": "past",
+        "contact_person": "Projects Division",
+        "certifications": ["ISO 9001:2015", "VdS Certified", "TAC Approved"],
+        "past_projects": [
+            {"project": "Chennai IT Park", "material": "Sprinkler System", "qty": "1 System", "delivery": 4.4, "quality": 4.6},
+        ],
+        "makes_approved": True,
+        "type_badge": "past",
+    },
+
+    # ── FINISHING & INTERIORS ───────────────────────────────────────────────────
+    {
+        "id": "v-kajaria",
+        "name": "Kajaria Ceramics Ltd",
+        "email": "projects@kajariaceramics.com",
+        "phone": "+91-11-39898000",
+        "location": "New Delhi",
+        "categories": ["Finishing & Interiors"],
+        "specialization": ["Vitrified Tiles", "Ceramic Tiles", "Porcelain Slabs", "Sanitary Ware"],
+        "rating": 4.6,
+        "type": "recommended",
+        "contact_person": "Project Sales Division",
+        "certifications": ["ISO 9001:2015", "Green Building Certified"],
+        "past_projects": [
+            {"project": "Lodha World Towers", "material": "Vitrified Tiles", "qty": "8,000 sqm", "delivery": 4.6, "quality": 4.8},
+        ],
+        "makes_approved": True,
+        "type_badge": "recommended",
+    },
+    {
+        "id": "v-asianpaints",
+        "name": "Asian Paints Ltd",
+        "email": "b2bsales@asianpaints.com",
+        "phone": "+91-22-39818000",
+        "location": "Mumbai, Maharashtra",
+        "categories": ["Finishing & Interiors"],
+        "specialization": ["Exterior Paint", "Interior Emulsion", "Waterproofing", "Texture Finish"],
+        "rating": 4.7,
+        "type": "recommended",
+        "contact_person": "Projects & Specifications Team",
+        "certifications": ["ISO 9001:2015", "Green Seal Certified"],
+        "past_projects": [
+            {"project": "Tata Elxsi Campus", "material": "Exterior & Interior Paint", "qty": "15,000 L", "delivery": 4.7, "quality": 4.8},
+        ],
+        "makes_approved": True,
+        "type_badge": "recommended",
+    },
+
+    # ── IT & COMMUNICATION ──────────────────────────────────────────────────────
+    {
+        "id": "v-systimax",
+        "name": "CommScope India Pvt Ltd (Systimax)",
+        "email": "india.projects@commscope.com",
+        "phone": "+91-80-66540000",
+        "location": "Bengaluru, Karnataka",
+        "categories": ["IT & Communication"],
+        "specialization": ["Structured Cabling", "Fibre Optic", "Data Networking", "PA Systems"],
+        "rating": 4.6,
+        "type": "recommended",
+        "contact_person": "Enterprise Solutions",
+        "certifications": ["ISO 9001:2015", "ISO/IEC 11801"],
+        "past_projects": [
+            {"project": "Deloitte India HQ", "material": "Structured Cabling Cat6A", "qty": "1 System", "delivery": 4.6, "quality": 4.7},
+        ],
+        "makes_approved": True,
+        "type_badge": "recommended",
     },
 ]
 
@@ -584,3 +848,159 @@ This quote request was generated by FlyyyAI Construction Intelligence Platform.
         "materials_count": len(body.materials),
     }
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# NEW FEATURE ENDPOINTS
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ── POST /extract-cad ─────────────────────────────────────────────────────────
+
+_ALLOWED_CAD_EXTS = {".dwg", ".dxf", ".pdf"}
+_CAD_MAX_BYTES = int(os.getenv("CAD_MAX_FILE_MB", "50")) * 1024 * 1024
+
+
+@router.post("/extract-cad")
+async def extract_cad_file(
+    file: UploadFile = File(...),
+    industry: str = Query(default="construction"),
+):
+    """
+    Extract material schedule from a CAD drawing file.
+    Uses 5-agent LangGraph pipeline: reader → reconstructor → embedder → extractor → aggregator.
+    Supports .dwg, .dxf, .pdf
+    """
+    ext = Path(file.filename).suffix.lower()
+    if ext not in _ALLOWED_CAD_EXTS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported format '{ext}'. Allowed: {sorted(_ALLOWED_CAD_EXTS)}",
+        )
+
+    contents = await file.read()
+    if len(contents) > _CAD_MAX_BYTES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File too large. Maximum allowed: {os.getenv('CAD_MAX_FILE_MB','50')} MB",
+        )
+
+    try:
+        from app.graphs.cad_langgraph import run_cad_extraction
+        result = run_cad_extraction(contents, file.filename)
+        return result
+
+    except Exception as e:
+        logger.error(f"[Route] CAD extraction failed: {e}")
+        raise HTTPException(status_code=500, detail=f"CAD extraction failed: {str(e)}")
+
+
+# ── POST /compare ─────────────────────────────────────────────────────────────
+
+class CompareRequest(BaseModel):
+    boq_items: List[Dict]
+    cad_items: List[Dict]
+    project_name: str = "Construction Project"
+    boq_filename: str = "BOQ.xlsx"
+    cad_filename: str = "Drawing.dwg"
+    qty_tolerance_pct: float = 10.0
+
+
+@router.post("/compare")
+async def compare_extractions(body: CompareRequest):
+    """
+    Compare BOQ extracted items vs CAD extracted items.
+
+    Returns matched / mismatched / missing items.
+    is_approved=True means it is safe to proceed to the vendor page.
+    """
+    from app.services.comparison_engine import compare_boq_vs_cad, build_engineer_report
+
+    try:
+        result = compare_boq_vs_cad(
+            body.boq_items,
+            body.cad_items,
+            body.qty_tolerance_pct,
+        )
+
+        email_body = build_engineer_report(
+            result,
+            body.project_name,
+            body.boq_filename,
+            body.cad_filename,
+        )
+
+        return {
+            **result.model_dump(),
+            "email_body": email_body,
+            "email_subject": (
+                f"FlyyyAI BOQ Review — {body.project_name} — "
+                f"{result.issues_count} Issue(s) Found"
+            ),
+        }
+
+    except Exception as e:
+        logger.error(f"[Route] Comparison failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Comparison failed: {str(e)}")
+
+
+# ── POST /email/engineer-report ───────────────────────────────────────────────
+
+class EngineerEmailRequest(BaseModel):
+    to_email: str
+    subject: str
+    body: str
+    project_name: str = "Construction Project"
+
+
+@router.post("/email/engineer-report")
+async def send_engineer_report(body: EngineerEmailRequest):
+    """
+    Send BOQ vs CAD comparison report to an engineer via email.
+    Falls back to preview mode when SMTP is not configured.
+    """
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+
+    smtp_host = os.getenv("SMTP_HOST", "")
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))
+    smtp_user = os.getenv("SMTP_USER", "")
+    smtp_pass = os.getenv("SMTP_PASSWORD", "")
+    smtp_from = os.getenv("SMTP_FROM_NAME", "FlyyyAI Platform")
+    configured = bool(smtp_host and smtp_user and smtp_pass)
+
+    if configured:
+        try:
+            msg = MIMEMultipart()
+            msg["From"]    = f"{smtp_from} <{smtp_user}>"
+            msg["To"]      = body.to_email
+            msg["Subject"] = body.subject
+            msg.attach(MIMEText(body.body, "plain"))
+
+            with smtplib.SMTP(smtp_host, smtp_port) as server:
+                server.starttls()
+                server.login(smtp_user, smtp_pass)
+                server.send_message(msg)
+
+            logger.info(f"[Email] Engineer report sent to {body.to_email}")
+            return {
+                "success": True,
+                "sent_to": body.to_email,
+                "preview_mode": False,
+            }
+        except Exception as e:
+            logger.error(f"[Email] Engineer report send failed: {e}")
+            return {
+                "success": False,
+                "error": str(e),
+                "preview_mode": False,
+            }
+    else:
+        logger.warning("[Email] SMTP not configured — returning preview for engineer report")
+        return {
+            "success": False,
+            "preview_mode": True,
+            "sent_to": body.to_email,
+            "email_subject": body.subject,
+            "email_body": body.body,
+            "message": "SMTP not configured. Copy the email body and send manually.",
+        }

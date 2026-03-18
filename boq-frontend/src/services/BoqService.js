@@ -5,6 +5,15 @@ const api = axios.create({
   timeout: 300000, // 5 minutes — AI takes time
 });
 
+// Attach JWT token to every request when set
+const setAuthToken = (token) => {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common['Authorization'];
+  }
+};
+
 const BoqService = {
   /** AI extraction with rule-based fallback + learning loop */
   extract(file, industry = 'construction') {
@@ -74,6 +83,83 @@ const BoqService = {
       requester_name: requesterName,
       requester_email: requesterEmail,
       reply_by_days: replyByDays,
+    });
+    return response.data;
+  },
+
+  /** Extract materials from a CAD drawing file (.dwg / .dxf / .pdf) */
+  extractCAD: async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await api.post('/extract-cad', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  /** Compare BOQ items vs CAD items — returns matched/mismatched/missing */
+  compare: async ({ boqItems, cadItems, projectName, boqFilename, cadFilename }) => {
+    const response = await api.post('/compare', {
+      boq_items:        boqItems,
+      cad_items:        cadItems,
+      project_name:     projectName   || 'Construction Project',
+      boq_filename:     boqFilename   || 'BOQ.xlsx',
+      cad_filename:     cadFilename   || 'Drawing.dwg',
+      qty_tolerance_pct: 10.0,
+    });
+    return response.data;
+  },
+
+  /** Send BOQ vs CAD comparison report to an engineer via email */
+  sendEngineerReport: async ({ toEmail, subject, body, projectName }) => {
+    const response = await api.post('/email/engineer-report', {
+      to_email:     toEmail,
+      subject:      subject,
+      body:         body,
+      project_name: projectName || 'Construction Project',
+    });
+    return response.data;
+  },
+
+  // ── Auth methods ──────────────────────────────────────────────────────────
+
+  /** Attach or remove JWT from all requests */
+  setAuthToken,
+
+  /** Register a new engineer account */
+  register: async ({ email, password, fullName, company = '' }) => {
+    const response = await api.post('/auth/register', {
+      email,
+      password,
+      full_name: fullName,
+      company,
+    });
+    return response.data;
+  },
+
+  /** Log in and receive a JWT token */
+  login: async ({ email, password }) => {
+    const response = await api.post('/auth/login', { email, password });
+    return response.data;
+  },
+
+  /** Verify token and get current user profile */
+  getMe: async (token) => {
+    const response = await api.get('/auth/me', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
+
+  /**
+   * Auto-send comparison report to logged-in engineer's email.
+   * No manual email input needed — uses the account email from the token.
+   */
+  sendComparisonReportToSelf: async ({ subject, reportBody, projectName }) => {
+    const response = await api.post('/auth/send-comparison-report', {
+      subject,
+      report_body:  reportBody,
+      project_name: projectName || 'Construction Project',
     });
     return response.data;
   },

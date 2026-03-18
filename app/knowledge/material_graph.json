@@ -1294,6 +1294,422 @@
       "typical_unit": "LS",
       "source": "langgraph_llm",
       "learned_at": "2026-03-14T18:57:12.612463+00:00"
+    },
+    {
+      "name": "NOTE : Please note that approvals from all statutory bodies as may be required shall be obtained by the contractor at",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "No.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:22.874236+00:00"
+    },
+    {
+      "name": "Three phase MCB DB for 3 BHK 6 Way ETPN DB Enclosure EB Incomer : 40A TP+N MCB Isolator Outgoings",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "No.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:22.911931+00:00"
+    },
+    {
+      "name": "Three phase MCB DB for 4 BHK 6 Way ETPN DB Enclosure EB Incomer : 40A TP+N MCB Isolator Outgoings",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "No.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:22.929654+00:00"
+    },
+    {
+      "name": "Sub Mains / Circuit Mains Submains using 1100V grade FRLS PVC insulated copper conductor wires drawn in 2mm thick rigid",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "M",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:22.945474+00:00"
+    },
+    {
+      "name": "2 x 4 Sqmm + 1 x 2.5 Sqmm copper conductor wires in 25mm dia. conduit. (For AC, Geyser, Kitchen, Mixer, MO WM,DW)",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "M",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:22.960452+00:00"
+    },
+    {
+      "name": "2 x 2.5 Sqmm + 1 x 1.5 Sqmm copper conductor wires in 20mm dia. Conduit.(For Lighting",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "No.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:22.976188+00:00"
+    },
+    {
+      "name": "Exhaust fan point with 6 A socket provided near fan and controlled by a 6A switch",
+      "category": "HVAC",
+      "synonyms": [],
+      "typical_unit": "No.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:22.991983+00:00"
+    },
+    {
+      "name": "1 nos 5 pin 6 amps switched socket outlet (AG",
+      "category": "Plumbing & Drainage",
+      "synonyms": [],
+      "typical_unit": "No.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.008101+00:00"
+    },
+    {
+      "name": "2 no 16 amps Universal switched Socket for UPS TV & Data System Supply and fixing of modular type TV socket outlet",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "No.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.022510+00:00"
+    },
+    {
+      "name": "Supply & Installationing of 2mm thick rigid blue colour PVC conduits with necessary accessories",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.036476+00:00"
+    },
+    {
+      "name": "25 mm dia conduit for Data COMMON AREA WORKS MCB Distribution Boards Supply",
+      "category": "HVAC",
+      "synonyms": [],
+      "typical_unit": "Nos.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.052799+00:00"
+    },
+    {
+      "name": "16way SPN MCB DB similar to Legrand type 6077 13",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "Nos.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.052799+00:00"
+    },
+    {
+      "name": "12way SPN MCB DB similar to Legrand type 6077 12",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "Nos.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.068721+00:00"
+    },
+    {
+      "name": "8way SPN MCB DB similar to Legrand type 6077 11 with Metal Door Incomer : 40/32A",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "Nos.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.098819+00:00"
+    },
+    {
+      "name": "Sub Main / Circuit Main for Lighting Supply",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.114419+00:00"
+    },
+    {
+      "name": "2 x 2.5 + 1 x 1.5sqmm in 20mm dia for Lighting circuits up to first point & Looping between Switch board to switch Board",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Mts",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.131138+00:00"
+    },
+    {
+      "name": "4 x 2.5 + 2 x 1.5 sqmm in 25mm dia conduit Point Wiring All points shall be earthed",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Mts",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.148097+00:00"
+    },
+    {
+      "name": "12 light points controlled by Existing 10A MCB Group Wiring Lift shaft wiring",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.165962+00:00"
+    },
+    {
+      "name": "Supply and Installation of the Staircase lights wiring for (2B+S+24Floors) & Terrace",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.183212+00:00"
+    },
+    {
+      "name": "Sub Mains / Circuit Mains for Raw Power Supply and laying of sub/ circuit mains using 2mm thick FRLS PVC conduit",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.195824+00:00"
+    },
+    {
+      "name": "2 x 6 + 1 x 2.5 sqmm in 25mm dia conduit - DB Earthing Units In MS Enclosure Supply",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Mts",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.212976+00:00"
+    },
+    {
+      "name": "1 nos 6/16A combined socket controlled by 1nos 16A Sp switch with cover plate with box",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.235550+00:00"
+    },
+    {
+      "name": "1 nos 6A multi pin universal socket controlled by 1nos 6A Sp switch",
+      "category": "HVAC",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.251815+00:00"
+    },
+    {
+      "name": "1 nos 15A multi pin universal socket controlled by 1nos 16A DP switch",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.255815+00:00"
+    },
+    {
+      "name": "Light Fixtures Supply, Installation, testing & commissioning of light fixture complete",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.287665+00:00"
+    },
+    {
+      "name": "Metal halide light fixture with all Accessories with frosted glass,Wth 1 x 70W MH Lamp (Transformer Yard)",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.303547+00:00"
+    },
+    {
+      "name": "Busbar of 0.5 Mtr length made out of 50x6 mm GI strip with drill holes of M8 at 25mm interval mounted on insulators.",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.319511+00:00"
+    },
+    {
+      "name": "Busbar of 0.5 Mtr length made out of 25x6 mm CU strip with drill holes of M8 at 25mm interval mounted on insulators.",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.335226+00:00"
+    },
+    {
+      "name": "600mm dia, 100Kg. Weight CI frame and cover 600MM dia Polycarbonate cover Heavy duty (200KG) 600MM dia",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Mts",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.352322+00:00"
+    },
+    {
+      "name": "Lightning Protection Design, supply, erection",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Set",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.364315+00:00"
+    },
+    {
+      "name": "MISCELLAENOUS Fabrication and providing MS items",
+      "category": "Finishing & Interior",
+      "synonyms": [],
+      "typical_unit": "Kg.",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.380139+00:00"
+    },
+    {
+      "name": "415V marked CI cable route marker with 450 mm long angle pedestal. The unit shall be grouted in the earth with concrete.",
+      "category": "Civil & Structural",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.396008+00:00"
+    },
+    {
+      "name": "Supply and Installation NEON Twin type Aviation Light fitting with Required supports and pipes.",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-16T08:39:23.412100+00:00"
+    },
+    {
+      "name": "3 Way Ring Main Unit (RMU) with Full DAS (2 LBS & 1 VCB, 2OD +1VL) without FRTU",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T05:25:43.301341+00:00"
+    },
+    {
+      "name": "4 Way Ring Main Unit (RMU) with Full DAS",
+      "category": "Electrical - Switchgear",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_discovery",
+      "discovered_at": "2026-03-18T05:25:43.335966+00:00"
+    },
+    {
+      "name": "LT Kiosk",
+      "category": "Electrical Works",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T05:25:43.369732+00:00"
+    },
+    {
+      "name": "LT Kiosk",
+      "category": "Electrical Equipment",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_discovery",
+      "discovered_at": "2026-03-18T05:25:43.391519+00:00"
+    },
+    {
+      "name": "Sub-LT Kiosk",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T05:25:43.417081+00:00"
+    },
+    {
+      "name": "3 Core x 4 Sq.mm Electrical Cable",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T05:25:43.433180+00:00"
+    },
+    {
+      "name": "Electrical Cable, 3 Core, 2.5 Sq.mm, XLPE Insulated",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T05:25:43.461049+00:00"
+    },
+    {
+      "name": "Street Lights",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T05:25:43.487246+00:00"
+    },
+    {
+      "name": "Shrub Up Light Luminaire",
+      "category": "Lighting",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_discovery",
+      "discovered_at": "2026-03-18T05:25:43.510470+00:00"
+    },
+    {
+      "name": "Wall Mounted Uplights",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T05:25:43.535364+00:00"
+    },
+    {
+      "name": "Flood Lights",
+      "category": "Electrical & Instrumentation",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_discovery",
+      "discovered_at": "2026-03-18T05:25:43.558159+00:00"
+    },
+    {
+      "name": "3 Way Ring Main Unit (RMU) with Full DAS, 2 LBS & 1 VCB, 2 Outgoing + 1 Voltage Line, without FRTU",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T08:08:37.556785+00:00"
+    },
+    {
+      "name": "4 Way Ring Main Unit (RMU) with Full DAS, 2 LBS, 2 VCB, 2OD, 2VL configuration (without FRTU)",
+      "category": "Electrical Equipment",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T08:08:37.616493+00:00"
+    },
+    {
+      "name": "Excavation for Pad/Footing",
+      "category": "Construction",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T08:08:37.640077+00:00"
+    },
+    {
+      "name": "Unspecified item (dimensions only)",
+      "category": "Civil Works / Structural",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_discovery",
+      "discovered_at": "2026-03-18T08:08:37.669200+00:00"
+    },
+    {
+      "name": "Excavation",
+      "category": "Construction - Earthworks",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_discovery",
+      "discovered_at": "2026-03-18T08:08:37.687316+00:00"
+    },
+    {
+      "name": "Danger Boards",
+      "category": "Site Establishment & Safety",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T08:08:37.731684+00:00"
+    },
+    {
+      "name": "LT Safety Kit (comprising Gloves, Helmets, Goggles, Safety Harness)",
+      "category": "Safety Equipment / PPE",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T08:08:37.755456+00:00"
+    },
+    {
+      "name": "11 kV Grade Rubber Mats",
+      "category": "Electrical",
+      "synonyms": [],
+      "typical_unit": "Nos",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-18T08:08:37.777849+00:00"
     }
   ]
 }
