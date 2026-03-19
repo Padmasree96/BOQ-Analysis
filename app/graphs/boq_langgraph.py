@@ -334,7 +334,7 @@ def agent_embedder(state: BOQState) -> dict:
 
     try:
         embeddings = GoogleGenerativeAIEmbeddings(
-            model="models/embedding-001",
+            model="models/text-embedding-004",
             google_api_key=GOOGLE_API_KEY,
         )
     except Exception as e:
