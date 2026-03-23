@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { Plus, Search, FolderKanban, Calendar, MapPin, MoreVertical, Copy, Archive, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useProjects } from '../hooks/useProjects';
+import { useAuth } from '../context/AuthContext';
 import EmptyState from '../components/EmptyState';
 import ConfirmDialog from '../components/ConfirmDialog';
+import CreateProjectFlow from '../components/NewProject/CreateProjectFlow';
 import Layout from '../components/Layout';
 
 const STATUS_COLORS = {
@@ -83,9 +87,28 @@ function CreateProjectModal({ onClose, onCreate }) {
 
 function ProjectCard({ project, onDuplicate, onArchive, onDelete, onClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const cardRef = useRef(null);
+
+  // GSAP: 3D tilt on hover
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const handleMove = (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 6;
+      const y = ((e.clientY - rect.top) / rect.height - 0.5) * -6;
+      gsap.to(el, { rotateY: x, rotateX: y, y: -4, boxShadow: '0 18px 40px rgba(15,23,42,0.10)', duration: 0.3, ease: 'power2.out', transformPerspective: 600 });
+    };
+    const handleLeave = () => gsap.to(el, { rotateY: 0, rotateX: 0, y: 0, boxShadow: '0 0 0 rgba(0,0,0,0)', duration: 0.5, ease: 'elastic.out(1, 0.5)' });
+    el.addEventListener('mousemove', handleMove);
+    el.addEventListener('mouseleave', handleLeave);
+    return () => { el.removeEventListener('mousemove', handleMove); el.removeEventListener('mouseleave', handleLeave); };
+  }, []);
+
   return (
-    <motion.div layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-md transition-shadow cursor-pointer group"
+    <motion.div ref={cardRef} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+      className="bg-white rounded-2xl border border-slate-100 p-5 cursor-pointer group gsap-card"
+      style={{ willChange: 'transform' }}
       onClick={() => onClick(project.id)}>
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -121,7 +144,7 @@ function ProjectCard({ project, onDuplicate, onArchive, onDelete, onClick }) {
         </div>
       </div>
       <h3 className="text-sm font-semibold text-slate-800 mb-1 truncate">{project.project_name}</h3>
-      <p className="text-xs text-slate-400 mb-3 truncate">{project.client || project.project_type}</p>
+      <p className="text-xs text-slate-400 mb-3 truncate">{project.client_name || project.project_type}</p>
       <div className="flex items-center gap-3 text-[11px] text-slate-400">
         {project.location && (
           <span className="flex items-center gap-1"><MapPin size={12} />{project.location}</span>
@@ -130,25 +153,46 @@ function ProjectCard({ project, onDuplicate, onArchive, onDelete, onClick }) {
           <span className="flex items-center gap-1"><Calendar size={12} />{format(new Date(project.deadline), 'dd MMM yyyy')}</span>
         )}
       </div>
-      {project.budget > 0 && (
-        <p className="text-xs font-medium text-slate-600 mt-2">Budget: {Number(project.budget).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })}</p>
+      {Number(project.estimated_value) > 0 && (
+        <p className="text-xs font-medium text-slate-600 mt-2">
+          Estimated value:{' '}
+          {Number(project.estimated_value).toLocaleString('en-IN', {
+            style: 'currency',
+            currency: project.currency || 'INR',
+            maximumFractionDigits: 0,
+          })}
+        </p>
       )}
     </motion.div>
   );
 }
 
 export default function ProjectsPage() {
-  const { projects, loading, createProject, updateProject, deleteProject, duplicateProject } = useProjects();
+  const { projects, loading, createProject, updateProject, deleteProject, duplicateProject, refetch } = useProjects();
+  const { user } = useAuth();
   const [showCreate, setShowCreate] = useState(false);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
   const navigate = useNavigate();
 
+  const gridRef = useRef(null);
   const filters = ['all', 'active', 'draft', 'pending', 'closed', 'archived'];
   const filtered = projects
     .filter(p => filter === 'all' ? p.status !== 'archived' : p.status === filter)
     .filter(p => !search || p.project_name.toLowerCase().includes(search.toLowerCase()));
+
+  // GSAP: Stagger card entrance on filter change
+  useGSAP(() => {
+    if (!gridRef.current || loading) return;
+    const cards = gridRef.current.querySelectorAll('.gsap-card');
+    if (cards.length) {
+      gsap.fromTo(cards,
+        { opacity: 0, y: 30, rotateY: 5, transformPerspective: 800 },
+        { opacity: 1, y: 0, rotateY: 0, duration: 0.6, stagger: 0.08, ease: 'back.out(1.4)' }
+      );
+    }
+  }, { scope: gridRef, dependencies: [filter, search, loading] });
 
   return (
     <Layout>
@@ -195,7 +239,7 @@ export default function ProjectsPage() {
             description="Create your first project to start extracting BOQ materials"
             action={() => setShowCreate(true)} actionLabel="Create Project" />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
+          <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map(p => (
               <ProjectCard key={p.id} project={p}
                 onClick={(id) => navigate(`/projects/${id}`)}
@@ -208,7 +252,35 @@ export default function ProjectsPage() {
       </div>
 
       <AnimatePresence>
-        {showCreate && <CreateProjectModal onClose={() => setShowCreate(false)} onCreate={createProject} />}
+        {showCreate && (
+          <CreateProjectFlow
+            userId={user?.id}
+            onCancel={() => setShowCreate(false)}
+            onComplete={({ projectId, project, withExtraction, next }) => {
+              setShowCreate(false);
+              refetch();
+
+              const projectPath = withExtraction
+                ? `/projects/${projectId}?autoExtract=1`
+                : `/projects/${projectId}`;
+
+              if (next === 'vendors') {
+                navigate('/vendors', {
+                  state: {
+                    postProject: {
+                      projectId,
+                      projectName: project?.project_name || 'Project',
+                      returnTo: projectPath,
+                    },
+                  },
+                });
+                return;
+              }
+
+              navigate(projectPath);
+            }}
+          />
+        )}
         {deleteTarget && (
           <ConfirmDialog title="Delete Project"
             message={`Are you sure you want to delete "${deleteTarget.project_name}"? This cannot be undone.`}

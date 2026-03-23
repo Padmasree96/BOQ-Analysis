@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, FileSpreadsheet, Layers, BarChart3, Users, Upload } from 'lucide-react';
+import gsap from 'gsap';
 import toast from 'react-hot-toast';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
@@ -13,6 +14,7 @@ import CategorySidebar from '../components/CategorySidebar';
 import CadExtractPanel from '../components/CadExtractPanel';
 import ComparisonPanel from '../components/ComparisonPanel';
 import VendorMailPanel from '../components/VendorMailPanel';
+import { normalizeProjectRecord } from '../lib/projectRecord';
 
 const TABS = [
   { id: 'boq', label: 'BOQ Extraction', icon: FileSpreadsheet },
@@ -24,6 +26,7 @@ const TABS = [
 export default function ProjectDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,6 +39,19 @@ export default function ProjectDetailPage() {
   const [activeCategory, setActiveCategory] = useState(null);
   const [extracting, setExtracting] = useState(false);
   const [extractError, setExtractError] = useState(null);
+  const tabContentRef = useRef(null);
+  const autoExtractRef = useRef(false);
+
+  // GSAP: Animate tab content on switch
+  const animateTabIn = useCallback(() => {
+    if (!tabContentRef.current) return;
+    gsap.fromTo(tabContentRef.current,
+      { opacity: 0, y: 20, scale: 0.98 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.2)' }
+    );
+  }, []);
+
+  useEffect(() => { animateTabIn(); }, [tab, animateTabIn]);
 
   // Stable items references
   const boqItems = useMemo(() => boqResult?.items || [], [boqResult]);
@@ -45,12 +61,12 @@ export default function ProjectDetailPage() {
     (async () => {
       const { data, error } = await supabase.from('projects').select('*').eq('id', id).single();
       if (error) { toast.error('Project not found'); navigate('/projects'); return; }
-      setProject(data);
+      setProject(normalizeProjectRecord(data));
       setLoading(false);
     })();
   }, [id, navigate]);
 
-  const handleBoqUpload = async (file) => {
+  const handleBoqUpload = useCallback(async (file) => {
     setExtracting(true);
     setExtractError(null);
     try {
@@ -63,7 +79,74 @@ export default function ProjectDetailPage() {
     } finally {
       setExtracting(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const autoExtractRequested = searchParams.get('autoExtract') === '1';
+    if (!autoExtractRequested || !project || autoExtractRef.current || boqResult || extracting) {
+      return;
+    }
+
+    autoExtractRef.current = true;
+    setTab('boq');
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        let boqPath = project.boq_file_path;
+
+        if (!boqPath) {
+          const { data: documents, error: documentsError } = await supabase
+            .from('documents')
+            .select('*')
+            .eq('project_id', project.id)
+            .order('created_at', { ascending: false });
+
+          if (documentsError) throw documentsError;
+
+          const boqDocument = (documents || []).find((document) => document.folder === 'boq')
+            || (documents || []).find((document) => ['xlsx', 'xls', 'xlsm'].includes(document.file_type));
+
+          boqPath = boqDocument?.file_path || '';
+        }
+
+        if (!boqPath) {
+          throw new Error('No saved BOQ file is attached to this project.');
+        }
+
+        const { data, error } = await supabase.storage
+          .from('project-files')
+          .download(boqPath);
+
+        if (error) throw error;
+
+        const fileName = boqPath.split('/').pop() || 'boq.xlsx';
+        const file = new File([data], fileName, {
+          type: data.type || 'application/octet-stream',
+        });
+
+        if (!cancelled) {
+          await handleBoqUpload(file);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setExtractError(error.message || 'Failed to load the saved BOQ file');
+          toast.error(error.message || 'Auto extraction failed');
+        }
+      } finally {
+        if (!cancelled) {
+          const nextParams = new URLSearchParams(searchParams);
+          nextParams.delete('autoExtract');
+          setSearchParams(nextParams, { replace: true });
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [boqResult, extracting, handleBoqUpload, project, searchParams, setSearchParams]);
 
   if (loading) {
     return (
@@ -86,7 +169,7 @@ export default function ProjectDetailPage() {
           </button>
           <div>
             <h1 className="text-xl font-bold text-slate-800">{project.project_name}</h1>
-            <p className="text-sm text-slate-400">{project.project_type} {project.client ? `- ${project.client}` : ''}</p>
+            <p className="text-sm text-slate-400">{project.project_type} {project.client_name ? `- ${project.client_name}` : ''}</p>
           </div>
           <span className="ml-auto text-xs font-medium px-2.5 py-1 rounded-full bg-blue-50 text-blue-700">
             {project.status}
@@ -106,6 +189,7 @@ export default function ProjectDetailPage() {
         </div>
 
         {/* Tab content */}
+        <div ref={tabContentRef}>
         {tab === 'boq' && (
           <div>
             {!boqResult ? (
@@ -165,9 +249,11 @@ export default function ProjectDetailPage() {
           <VendorMailPanel
             items={boqItems}
             projectName={project?.project_name || 'Construction Project'}
+            userId={user?.id}
             currentUser={user}
           />
         )}
+        </div>
       </div>
     </Layout>
   );

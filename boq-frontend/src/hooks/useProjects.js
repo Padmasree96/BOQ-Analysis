@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
+import {
+  buildProjectInsertPayload,
+  buildProjectUpdatePayload,
+  normalizeProjectRecord,
+} from '../lib/projectRecord';
 
 export function useProjects() {
   const { user } = useAuth();
@@ -13,9 +18,10 @@ export function useProjects() {
     const { data, error } = await supabase
       .from('projects')
       .select('*')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false });
     if (error) console.error('[Projects] Fetch error:', error.message);
-    setProjects(data || []);
+    setProjects((data || []).map((project) => normalizeProjectRecord(project)));
     setLoading(false);
   }, [user]);
 
@@ -28,26 +34,31 @@ export function useProjects() {
   }, [fetch]);
 
   const createProject = async (project) => {
+    const payload = buildProjectInsertPayload(user.id, project);
     const { data, error } = await supabase
       .from('projects')
-      .insert({ ...project, user_id: user.id })
+      .insert(payload)
       .select()
       .single();
     if (error) throw error;
-    setProjects(prev => [data, ...prev]);
-    return data;
+    const normalizedProject = normalizeProjectRecord(data);
+    setProjects(prev => [normalizedProject, ...prev]);
+    return normalizedProject;
   };
 
   const updateProject = async (id, updates) => {
+    const existingProject = projects.find((project) => project.id === id) || {};
+    const payload = buildProjectUpdatePayload(existingProject, updates);
     const { data, error } = await supabase
       .from('projects')
-      .update({ ...updates, updated_at: new Date().toISOString() })
+      .update(payload)
       .eq('id', id)
       .select()
       .single();
     if (error) throw error;
-    setProjects(prev => prev.map(p => p.id === id ? data : p));
-    return data;
+    const normalizedProject = normalizeProjectRecord(data);
+    setProjects(prev => prev.map(p => p.id === id ? normalizedProject : p));
+    return normalizedProject;
   };
 
   const deleteProject = async (id) => {
@@ -57,8 +68,12 @@ export function useProjects() {
   };
 
   const duplicateProject = async (project) => {
-    const { id, created_at, updated_at, ...rest } = project;
-    return createProject({ ...rest, project_name: `${rest.project_name} (Copy)`, status: 'draft' });
+    return createProject({
+      ...project,
+      project_name: `${project.project_name} (Copy)`,
+      status: 'draft',
+      invited_vendors: [],
+    });
   };
 
   return { projects, loading, createProject, updateProject, deleteProject, duplicateProject, refetch: fetch };
