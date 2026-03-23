@@ -1,4 +1,19 @@
+import os
 import re
+
+# ─── AI Model Configuration ──────────────────────────────────
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "models/gemini-embedding-001")
+# Primary LLM (gemini-2.5-flash: best quality, 20 req/day free tier)
+LLM_MODEL_PRIMARY = os.getenv("LLM_MODEL", "gemini-2.5-flash")
+# Fallback LLM (gemini-2.0-flash: good quality, 1500 req/day free tier)
+LLM_MODEL_FALLBACK = os.getenv("LLM_MODEL_FALLBACK", "gemini-2.0-flash")
+# Full model fallback chain — each has its own free-tier quota
+LLM_MODEL_CHAIN = [
+    LLM_MODEL_PRIMARY,
+    LLM_MODEL_FALLBACK,
+    "gemini-2.0-flash-lite",
+    "gemini-2.5-pro",
+]
 
 # ─── Table Detection ─────────────────────────────────────────
 HEADER_SCAN_LIMIT = 20
