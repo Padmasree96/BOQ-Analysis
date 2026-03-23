@@ -57,6 +57,7 @@ _ONTOLOGY_PATH = _KNOWLEDGE_DIR / "boq_ontology.json"
 
 # Import existing project utilities
 from app.config.settings import (
+    EMBEDDING_MODEL,
     EPC_CATEGORY_RULES,
     HEADER_KEYWORDS,
     NON_MATERIAL_PHRASES,
@@ -334,7 +335,7 @@ def agent_embedder(state: BOQState) -> dict:
 
     try:
         embeddings = GoogleGenerativeAIEmbeddings(
-            model="models/text-embedding-004",
+            model=EMBEDDING_MODEL,
             google_api_key=GOOGLE_API_KEY,
         )
     except Exception as e:

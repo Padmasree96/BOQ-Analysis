@@ -1782,6 +1782,70 @@
       "typical_unit": "-",
       "source": "langgraph_discovery",
       "discovered_at": "2026-03-19T15:30:48.507658+00:00"
+    },
+    {
+      "name": "Insulated Chilled Water Pipe",
+      "category": "Mechanical - Piping",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-20T17:09:52.626141+00:00"
+    },
+    {
+      "name": "Insulated Underground Chilled Water Pipe",
+      "category": "Mechanical",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-21T14:16:32.118135+00:00"
+    },
+    {
+      "name": "Passenger Lift",
+      "category": "MEP Equipment",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_discovery",
+      "discovered_at": "2026-03-21T14:31:00.246810+00:00"
+    },
+    {
+      "name": "Insulated Chilled Water Pipe (Underground)",
+      "category": "HVAC Piping",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_discovery",
+      "discovered_at": "2026-03-21T14:31:00.271434+00:00"
+    },
+    {
+      "name": "4C x 16 sq.mm Aluminium XLPE cable",
+      "category": "Electrical Works",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-22T09:33:51.573856+00:00"
+    },
+    {
+      "name": "Underground Insulated Chilled Water Pipe",
+      "category": "Mechanical",
+      "synonyms": [],
+      "typical_unit": "Rmt",
+      "source": "langgraph_llm",
+      "learned_at": "2026-03-22T09:42:33.040466+00:00"
+    },
+    {
+      "name": "Passenger Lift",
+      "category": "MEP",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_discovery",
+      "discovered_at": "2026-03-22T10:44:38.040746+00:00"
+    },
+    {
+      "name": "Passenger Lift",
+      "category": "Specialty Equipment",
+      "synonyms": [],
+      "typical_unit": "-",
+      "source": "langgraph_discovery",
+      "discovered_at": "2026-03-22T13:53:03.765295+00:00"
     }
   ]
 }
