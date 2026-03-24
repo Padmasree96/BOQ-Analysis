@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Building2, Mail, Lock, Loader2, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { useAuth } from '../context/AuthContext';
 import {
   buttonMotion,
@@ -15,12 +17,37 @@ import {
 export default function LoginPage() {
   const { loginWithEmail, loginWithGoogle, authError, setAuthError } = useAuth();
   const navigate = useNavigate();
+  const containerRef = useRef(null);
+  const bgOrb1Ref = useRef(null);
+  const bgOrb2Ref = useRef(null);
+  const formRef = useRef(null);
 
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [showPw, setShowPw]     = useState(false);
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState('');
+
+  // GSAP: Floating orbs + form entrance
+  useGSAP(() => {
+    // Floating background orbs
+    gsap.to(bgOrb1Ref.current, {
+      x: 30, y: -20, scale: 1.08,
+      duration: 6, repeat: -1, yoyo: true, ease: 'sine.inOut',
+    });
+    gsap.to(bgOrb2Ref.current, {
+      x: -25, y: 15, scale: 0.95,
+      duration: 8, repeat: -1, yoyo: true, ease: 'sine.inOut',
+    });
+
+    // Form fields stagger reveal
+    if (formRef.current) {
+      gsap.fromTo(formRef.current.querySelectorAll('.gsap-field'),
+        { opacity: 0, y: 20, scale: 0.97 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.4)', delay: 0.3 }
+      );
+    }
+  }, { scope: containerRef });
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -53,15 +80,16 @@ export default function LoginPage() {
 
   return (
     <motion.div
+      ref={containerRef}
       variants={pageVariants}
       initial="initial"
       animate="animate"
       exit="exit"
       className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/30 flex items-center justify-center px-4 py-12 relative overflow-hidden"
     >
-      {/* Background decorative circles */}
-      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-blue-100/40 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] rounded-full bg-indigo-100/30 blur-3xl pointer-events-none" />
+      {/* Background decorative circles with GSAP float */}
+      <div ref={bgOrb1Ref} className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-blue-100/40 blur-3xl pointer-events-none" />
+      <div ref={bgOrb2Ref} className="absolute -bottom-32 -left-32 w-[500px] h-[500px] rounded-full bg-indigo-100/30 blur-3xl pointer-events-none" />
 
       <motion.div
         variants={scaleInVariants}
@@ -84,8 +112,8 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <motion.div layoutId="auth-card" className="bg-white/80 backdrop-blur-xl rounded-2xl border border-white/60 shadow-xl shadow-blue-100/20 p-8">
-          <div className="mb-6">
+        <motion.div ref={formRef} layoutId="auth-card" className="bg-white/80 backdrop-blur-xl rounded-2xl border border-white/60 shadow-xl shadow-blue-100/20 p-8">
+          <div className="mb-6 gsap-field">
             <h3 className="text-lg font-bold text-slate-900">Welcome back</h3>
             <p className="text-sm text-slate-400 mt-1">
               Sign in to access your projects and vendors.
@@ -95,7 +123,7 @@ export default function LoginPage() {
           <motion.button
             {...subtleButtonMotion}
             onClick={handleGoogle}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-sm font-medium text-slate-700 transition-colors mb-6"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-sm font-medium text-slate-700 transition-colors mb-6 gsap-field"
           >
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
@@ -115,7 +143,7 @@ export default function LoginPage() {
           {/* Email/Password Form */}
           <form onSubmit={handleLogin} className="flex flex-col gap-4">
             {/* Email */}
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1.5 gsap-field">
               <label className="text-xs font-medium text-slate-600">Email Address</label>
               <div className="relative flex items-center">
                 <span className="absolute left-3.5 pointer-events-none text-slate-400">
@@ -133,7 +161,7 @@ export default function LoginPage() {
             </div>
 
             {/* Password */}
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1.5 gsap-field">
               <label className="text-xs font-medium text-slate-600">Password</label>
               <div className="relative flex items-center">
                 <span className="absolute left-3.5 pointer-events-none text-slate-400">

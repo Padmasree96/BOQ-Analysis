@@ -72,9 +72,13 @@ export default function VendorManager({ userId, projectId, projectName, mode = '
   useGSAP(() => {
     if (!tableRef.current || loading) return;
     const rows = tableRef.current.querySelectorAll('.vendor-row');
-    if (rows.length) {
-      gsap.from(rows, { opacity: 0, x: -24, stagger: 0.06, duration: 0.35, ease: 'power2.out' });
-    }
+    if (!rows.length) return;
+    // Kill any existing animations on these rows first
+    gsap.killTweensOf(rows);
+    gsap.fromTo(rows,
+      { opacity: 0, x: -24 },
+      { opacity: 1, x: 0, stagger: 0.04, duration: 0.3, ease: 'power2.out', clearProps: 'opacity,transform' }
+    );
   }, { scope: tableRef, dependencies: [vendors.length, loading, tab] });
 
   // ── Filtered vendors ────────────────────────────────────────

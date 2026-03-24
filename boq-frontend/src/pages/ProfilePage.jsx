@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { User, Mail, Phone, Briefcase, BadgeCheck, ArrowLeft, Save, Loader2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -15,6 +17,8 @@ import {
 export default function ProfilePage() {
   const { user, profile, updateProfile, logout } = useAuth();
   const navigate = useNavigate();
+  const formRef = useRef(null);
+  const avatarRef = useRef(null);
 
   const [fullName, setFullName]       = useState('');
   const [company, setCompany]         = useState('');
@@ -54,6 +58,23 @@ export default function ProfilePage() {
     navigate('/login');
   };
 
+  // GSAP: Avatar glow pulse + form field stagger
+  useGSAP(() => {
+    if (avatarRef.current) {
+      gsap.fromTo(avatarRef.current,
+        { boxShadow: '0 0 0 0 rgba(37, 99, 235, 0.4)' },
+        { boxShadow: '0 0 20px 8px rgba(37, 99, 235, 0)', duration: 1.5, repeat: 2, ease: 'sine.inOut' }
+      );
+    }
+    if (formRef.current) {
+      const fields = formRef.current.querySelectorAll('.flex.flex-col.gap-1\\.5, .grid');
+      gsap.fromTo(fields,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.4, stagger: 0.08, ease: 'power3.out', delay: 0.2 }
+      );
+    }
+  }, { scope: formRef });
+
   if (!user) {
     navigate('/login');
     return null;
@@ -86,7 +107,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 py-12">
+      <div ref={formRef} className="max-w-lg mx-auto px-4 py-12">
         <motion.div
           variants={scaleInVariants}
           initial="initial"
@@ -95,6 +116,7 @@ export default function ProfilePage() {
         >
           <div className="flex flex-col items-center mb-8">
             <motion.div
+              ref={avatarRef}
               initial={{ scale: 0.94, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.08 }}
@@ -105,7 +127,7 @@ export default function ProfilePage() {
             <p className="text-sm text-slate-400">{user.email}</p>
           </div>
 
-          <div className="card p-8">
+          <div className="card p-8 gsap-profile-card">
             <div className="flex items-start justify-between gap-4 mb-6">
               <div>
                 <h3 className="text-lg font-bold text-slate-900 mb-1">Engineer Profile</h3>

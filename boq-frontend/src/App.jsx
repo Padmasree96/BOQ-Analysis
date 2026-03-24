@@ -144,7 +144,12 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <MotionConfig reducedMotion="user" transition={transitions.ui}>
-      <BrowserRouter>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <ErrorBoundary>
           <AnimatedRoutes />
         </ErrorBoundary>

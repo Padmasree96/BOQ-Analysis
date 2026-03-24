@@ -10,13 +10,10 @@ import {
   Pencil,
   Check,
   Loader2,
-  FileSpreadsheet,
-  Layers,
   CheckCircle2,
   Settings2,
   Upload,
   AlertTriangle,
-  Rocket,
   Save,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -63,18 +60,6 @@ const EMPTY_PROJECT_INFO = {
 
 const DOC_ZONES = [
   {
-    key: 'boq',
-    label: 'BOQ Excel File',
-    hint: '.xlsx, .xls, .xlsm',
-    accept: '.xlsx,.xls,.xlsm',
-    icon: FileSpreadsheet,
-    background: '#F0FDF4',
-    border: '#16A34A',
-    iconClass: 'text-green-600',
-    multi: false,
-    requiredForExtract: true,
-  },
-  {
     key: 'spec',
     label: 'Technical Specs / Tender PDF',
     hint: '.pdf, .doc, .docx, .ppt, .pptx',
@@ -84,17 +69,6 @@ const DOC_ZONES = [
     border: '#F59E0B',
     iconClass: 'text-amber-600',
     multi: false,
-  },
-  {
-    key: 'drawings',
-    label: 'CAD / Drawings',
-    hint: '.dwg, .dxf, .pdf',
-    accept: '.dwg,.dxf,.pdf',
-    icon: Layers,
-    background: '#FAF5FF',
-    border: '#7C3AED',
-    iconClass: 'text-violet-600',
-    multi: true,
   },
 ];
 
@@ -188,9 +162,7 @@ export default function CreateProjectFlow({ onComplete, onCancel, userId }) {
   const [extractedFromPdf, setExtractedFromPdf] = useState(false);
   const [editMode, setEditMode] = useState(true);
   const [documents, setDocuments] = useState({
-    boq: null,
     spec: null,
-    drawings: [],
   });
   const [errors, setErrors] = useState({});
   const [documentError, setDocumentError] = useState('');
@@ -308,12 +280,7 @@ export default function CreateProjectFlow({ onComplete, onCancel, userId }) {
     return Object.keys(nextErrors).length === 0;
   }, [projectInfo]);
 
-  const validateDocuments = (withExtraction) => {
-    if (withExtraction && !documents.boq) {
-      setDocumentError('Upload a BOQ Excel file to create the project and start extraction immediately.');
-      return false;
-    }
-
+  const validateDocuments = () => {
     setDocumentError('');
     return true;
   };
@@ -359,15 +326,14 @@ export default function CreateProjectFlow({ onComplete, onCancel, userId }) {
     goToStep('documents');
   };
 
-  const handleSave = async (withExtraction) => {
+  const handleSave = async (withExtraction = false) => {
     if (!validateForm()) {
       goToStep('project_form');
       toast.error('Please fill the required project details.');
       return;
     }
 
-    if (!validateDocuments(withExtraction)) {
-      toast.error('A BOQ Excel file is required for immediate extraction.');
+    if (!validateDocuments()) {
       return;
     }
 
@@ -383,7 +349,7 @@ export default function CreateProjectFlow({ onComplete, onCancel, userId }) {
       );
 
       setCreatedProject({ ...result, withExtraction });
-      toast.success(withExtraction ? 'Project created and queued for extraction.' : 'Project created successfully.');
+      toast.success('Project created successfully.');
       goToStep('done');
     } catch (error) {
       toast.error(error.message || 'Failed to create project.');
@@ -560,27 +526,15 @@ export default function CreateProjectFlow({ onComplete, onCancel, userId }) {
               )}
 
               {step === 'documents' && (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => handleSave(false)}
-                    disabled={saving}
-                    className="btn-secondary flex items-center gap-2 text-sm"
-                  >
-                    {saving && saveMode === 'create' ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-                    Create Project
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleSave(true)}
-                    disabled={saving}
-                    className="btn-primary flex items-center gap-2 text-sm"
-                  >
-                    {saving && saveMode === 'create_extract' ? <Loader2 size={14} className="animate-spin" /> : <Rocket size={14} />}
-                    Create Project &amp; Extract
-                  </button>
-                </>
+                <button
+                  type="button"
+                  onClick={() => handleSave(false)}
+                  disabled={saving}
+                  className="btn-primary flex items-center gap-2 text-sm"
+                >
+                  {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+                  Create Project
+                </button>
               )}
             </div>
           </div>
@@ -930,10 +884,10 @@ function DocumentsStep({
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-slate-900">Upload Project Files</h2>
-        <p className="mt-2 text-sm text-slate-500">Upload only BOQ Excel, CAD drawings, and technical/tender documents.</p>
+        <p className="mt-2 text-sm text-slate-500">Upload technical specifications or tender documents for this project.</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 max-w-md">
         {DOC_ZONES.map((zone) => (
           <DocZone
             key={zone.key}
@@ -966,7 +920,7 @@ function DocumentsStep({
       <div className="flex items-start gap-3 rounded-2xl border-l-[3px] border-teal-600 bg-sky-50 px-5 py-4">
         <Upload size={16} className="mt-0.5 shrink-0 text-teal-600" />
         <p className="text-sm text-slate-600">
-          Upload BOQ + CAD drawings together for AI cross-referencing and automatic specification matching.
+          Upload tender documents or technical specs. BOQ extraction and CAD analysis can be done from the project detail page.
         </p>
       </div>
     </div>
@@ -982,9 +936,7 @@ function CompletedStep({ project, saveMode, onOpenProject, onAddVendors }) {
         </div>
         <h2 className="text-2xl font-bold text-slate-900">Project created</h2>
         <p className="mt-2 text-sm text-slate-500">
-          {saveMode === 'create_extract'
-            ? 'The project is saved and BOQ extraction will start when you open the project page.'
-            : 'The project is saved. You can open it now or add vendors first.'}
+          The project is saved. You can open it to upload BOQ/CAD files, or add vendors first.
         </p>
       </div>
 
