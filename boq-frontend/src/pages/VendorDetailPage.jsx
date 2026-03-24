@@ -234,7 +234,13 @@ export default function VendorDetailPage() {
                   </div>
                 </div>
               </div>
-              <button className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm font-bold transition">
+              <button 
+                onClick={() => {
+                  console.log("Clicked Send Quote", vendor?.id);
+                  navigate(`/projects?vendorId=${vendor.id}`);
+                }}
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm font-bold transition"
+              >
                 Send Quote Request
               </button>
             </div>
