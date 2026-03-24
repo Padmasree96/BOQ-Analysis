@@ -122,10 +122,27 @@ function updateLocalVendor(userId, vendorId, updates) {
 
 function upsertLocalVendors(userId, vendors) {
   const current = readLocalVendors(userId);
-  const byId = new Map(current.map((vendor) => [vendor.id, vendor]));
+  // Deduplicate by email first, then merge by id
+  const byEmail = new Map();
+  const byId = new Map();
+
+  current.forEach((vendor) => {
+    const email = (vendor.email || '').toLowerCase().trim();
+    if (email && byEmail.has(email)) return; // skip duplicate emails
+    if (email) byEmail.set(email, vendor.id);
+    byId.set(vendor.id, vendor);
+  });
 
   vendors.forEach((vendor) => {
-    byId.set(vendor.id, vendor);
+    const email = (vendor.email || '').toLowerCase().trim();
+    if (email && byEmail.has(email)) {
+      // Update existing vendor with same email instead of adding new
+      const existingId = byEmail.get(email);
+      byId.set(existingId, { ...vendor, id: existingId });
+    } else {
+      if (email) byEmail.set(email, vendor.id);
+      byId.set(vendor.id, vendor);
+    }
   });
 
   const merged = Array.from(byId.values());
@@ -289,6 +306,18 @@ async function selectVendorsWithOwnerFallback(userId) {
   return data || [];
 }
 
+/** Deduplicate vendors by email, keeping the first occurrence */
+function deduplicateByEmail(vendors) {
+  const seen = new Set();
+  return vendors.filter((v) => {
+    const email = (v.email || '').toLowerCase().trim();
+    if (!email) return true; // keep vendors without email
+    if (seen.has(email)) return false;
+    seen.add(email);
+    return true;
+  });
+}
+
 export async function getMyVendors(userId) {
   const localVendors = readLocalVendors(userId).map((record, index) => normalizeVendorRecord(record, index));
 
@@ -300,7 +329,7 @@ export async function getMyVendors(userId) {
       .map((record, index) => normalizeVendorRecord(record, index));
 
     if (!remoteVendors.length) {
-      return sortVendors(localVendors);
+      return sortVendors(deduplicateByEmail(localVendors));
     }
 
     const merged = [...remoteVendors];
@@ -310,10 +339,10 @@ export async function getMyVendors(userId) {
       }
     });
 
-    return sortVendors(merged);
+    return sortVendors(deduplicateByEmail(merged));
   } catch (error) {
     if (isVendorSchemaError(error)) {
-      return sortVendors(localVendors);
+      return sortVendors(deduplicateByEmail(localVendors));
     }
 
     throw error;
@@ -412,8 +441,16 @@ export async function bulkAddVendors(userId, file) {
     columnMap[normalizeHeader(key)] = key;
   });
 
+  // Load existing vendors to deduplicate by email
+  const existingVendors = readLocalVendors(userId);
+  const existingEmails = new Set(
+    existingVendors.map((v) => (v.email || '').toLowerCase().trim()).filter(Boolean)
+  );
+
   const records = [];
   const rowErrors = [];
+  const seenEmails = new Set();
+  let duplicateCount = 0;
 
   for (const [index, row] of rows.entries()) {
     const companyName = getColumnValue(row, columnMap, [
@@ -433,6 +470,22 @@ export async function bulkAddVendors(userId, file) {
       continue;
     }
 
+    const emailLower = email.toLowerCase().trim();
+
+    // Skip duplicates within the file
+    if (seenEmails.has(emailLower)) {
+      duplicateCount += 1;
+      continue;
+    }
+
+    // Skip if already exists in vendor list
+    if (existingEmails.has(emailLower)) {
+      duplicateCount += 1;
+      continue;
+    }
+
+    seenEmails.add(emailLower);
+
     records.push({
       user_id: userId,
       company_name: companyName,
@@ -451,6 +504,10 @@ export async function bulkAddVendors(userId, file) {
       ])),
       status: 'active',
     });
+  }
+
+  if (duplicateCount > 0) {
+    rowErrors.push(`${duplicateCount} duplicate vendor(s) skipped`);
   }
 
   if (!records.length) {

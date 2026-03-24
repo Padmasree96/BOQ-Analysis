@@ -109,40 +109,27 @@ async function clientSideExtract(file) {
     return normalizePayload({
       project_name: matchField(
         text,
-        new RegExp(`(?:project\\s*(?:name|title)|name\\s*of\\s*work)\\s*${DASH}\\s*(.+)`, 'i')
+        new RegExp(`(?:project\\s*(?:name|title)|name\\s*of\\s*work)\\s*${DASH}\\s*(.{3,120}?)(?:\\s{2,}|\\n|$)`, 'i')
       ),
       client_name: matchField(
         text,
-        new RegExp(`(?:client|owner|employer|authority)\\s*${DASH}\\s*(.+)`, 'i')
+        new RegExp(`(?:client|owner|employer|authority)\\s*(?:name)?\\s*${DASH}\\s*(.{3,120}?)(?:\\s{2,}|\\n|$)`, 'i')
       ),
       project_type: inferProjectType(text),
-      location: matchField(
-        text,
-        new RegExp(`(?:location|site|address|place)\\s*${DASH}\\s*(.+)`, 'i')
-      ),
-      estimated_value:
-        matchField(
-          text,
-          new RegExp(
-            `(?:estimated\\s*(?:cost|value|budget)|project\\s*cost)\\s*${DASH}\\s*[\\u20B9$]?\\s*([\\d,.]+)`,
-            'i'
-          )
-        )?.replace(/,/g, '') || '',
+      location: extractLocation(text),
+      estimated_value: extractEstimatedValue(text),
       currency: inferCurrency(text),
       deadline: matchDate(text),
       description: summarizeText(text),
       contact_person: matchField(
         text,
         new RegExp(
-          `(?:contact\\s*person|engineer\\s*in\\s*charge|project\\s*manager)\\s*${DASH}\\s*(.+)`,
+          `(?:contact\\s*person|engineer\\s*in\\s*charge|project\\s*manager)\\s*${DASH}\\s*(.{3,80}?)(?:\\s{2,}|\\n|$)`,
           'i'
         )
       ),
       contact_email: matchField(text, /[\w.-]+@[\w.-]+\.\w{2,}/),
-      tender_number: matchField(
-        text,
-        new RegExp(`(?:tender|nit|ref(?:erence)?)\\s*(?:no|number|#)?\\s*${DASH}\\s*(.+)`, 'i')
-      ),
+      tender_number: extractTenderNumber(text),
       floors: matchField(text, /(\d+)\s*(?:floor|floors|storey|storeys|story|stories)\b/i),
       area_sqm:
         matchField(text, /([\d,]+)\s*(?:sq\.?\s*m|sqm|m2|m\u00B2)\b/i)?.replace(/,/g, '') || '',
@@ -159,20 +146,131 @@ function matchField(text, regex) {
   return sanitize(match[1] || match[0]);
 }
 
-function matchDate(text) {
-  const iso = text.match(/\b(\d{4}[-/]\d{2}[-/]\d{2})\b/);
-  if (iso) return iso[1].replace(/\//g, '-');
+/** Extract location — limited to short, meaningful text */
+function extractLocation(text) {
+  // Try structured "Location : value" first
+  const structured = text.match(
+    new RegExp(`(?:location|site\\s*(?:location|address)|place\\s*of\\s*work|address)\\s*${DASH}\\s*(.{3,150}?)(?:\\s{2,}|\\n|\\d+\\s|$)`, 'i')
+  );
+  if (structured) {
+    // Clean: remove URLs, long legal text, "Sd/", signatures
+    let loc = sanitize(structured[1])
+      .replace(/https?:\/\/\S+/gi, '')
+      .replace(/\b(?:Sd\/|Authorised\s+Signatory|reserves?\s+the\s+right).*$/i, '')
+      .replace(/\bthe\s+bidder\b.*$/i, '')
+      .trim();
+    if (loc.length > 3 && loc.length < 150) return loc;
+  }
 
-  const dmy = text.match(/\b(\d{1,2})[/-](\d{1,2})[/-](\d{4})\b/);
-  if (!dmy) return '';
-  return `${dmy[3]}-${dmy[2].padStart(2, '0')}-${dmy[1].padStart(2, '0')}`;
+  // Fallback: look for Indian city/state names
+  const cities = text.match(
+    /\b(Mumbai|Delhi|Bangalore|Bengaluru|Chennai|Hyderabad|Kolkata|Pune|Ahmedabad|Jaipur|Lucknow|Guwahati|Bhopal|Chandigarh|Patna|Thiruvananthapuram|Kochi|Nagpur|Indore|Coimbatore|Visakhapatnam|Surat|Vadodara|Ranchi|Dehradun|Shimla|Jammu|Srinagar|Imphal|Shillong|Aizawl|Kohima|Gangtok|Agartala|Itanagar|Dibrugarh|Jorhat|Tinsukia|Silchar|Assam|Maharashtra|Karnataka|Tamil\s*Nadu|Telangana|West\s*Bengal|Gujarat|Rajasthan|Uttar\s*Pradesh|Madhya\s*Pradesh|Kerala|Bihar|Odisha|Punjab|Haryana|Jharkhand|Chhattisgarh|Uttarakhand|Goa|Tripura|Meghalaya|Manipur|Nagaland|Mizoram|Arunachal\s*Pradesh|Sikkim)[,\s]*/i
+  );
+  if (cities) return sanitize(cities[1]);
+
+  return '';
+}
+
+/** Extract tender/reference number — just the code, not specs */
+function extractTenderNumber(text) {
+  // Pattern: "Tender Ref No." or "NIT No." followed by a short reference code
+  const patterns = [
+    /tender\s*ref(?:erence)?\s*(?:no\.?|number|#)\s*[:\-–—]?\s*([A-Z0-9][\w\-\/().]{2,40})/i,
+    /(?:tender|nit)\s*(?:no\.?|number|#)\s*[:\-–—]?\s*([A-Z0-9][\w\-\/().]{2,40})/i,
+    /ref(?:erence)?\s*(?:no\.?|number|#)\s*[:\-–—]?\s*([A-Z0-9][\w\-\/().]{2,40})/i,
+    /(?:tender|nit|reference)\s*[:\-–—]\s*([A-Z0-9][\w\-\/().]{2,40})/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match) {
+      const val = sanitize(match[1]);
+      // Reject if it looks like technical specs (contains "should", "must", "mm", "vacuum", etc.)
+      if (/(?:should|must|shall|vacuum|suction|mm\s*of|hg|unit)/i.test(val)) continue;
+      if (val.length >= 3) return val;
+    }
+  }
+  return '';
+}
+
+/** Extract estimated value — look for currency amounts in the right context */
+function extractEstimatedValue(text) {
+  // Try structured label first
+  const structured = text.match(
+    new RegExp(
+      `(?:estimated\\s*(?:cost|value|budget)|project\\s*(?:cost|value|budget)|tender\\s*(?:value|cost|amount)|contract\\s*(?:value|amount))\\s*${DASH}\\s*[\\u20B9$₹]?\\s*([\\d,.]+\\s*(?:lakh|lakhs|crore|crores|cr|lac|million|billion)?)`,
+      'i'
+    )
+  );
+  if (structured) return sanitize(structured[1]).replace(/,/g, '');
+
+  // Look for large INR amounts (lakhs/crores)
+  const inrAmount = text.match(
+    /[\u20B9₹]\s*([\d,.]+)\s*(?:lakh|lakhs|crore|crores|cr|lac|million)?/i
+  );
+  if (inrAmount) return sanitize(inrAmount[1]).replace(/,/g, '');
+
+  // Look for "Rs." or "INR" amounts
+  const rsAmount = text.match(
+    /(?:Rs\.?|INR)\s*([\d,.]+)\s*(?:lakh|lakhs|crore|crores|cr|lac|million)?/i
+  );
+  if (rsAmount) return sanitize(rsAmount[1]).replace(/,/g, '');
+
+  return '';
+}
+
+function isValidDate(year, month, day) {
+  const y = parseInt(year, 10);
+  const m = parseInt(month, 10);
+  const d = parseInt(day, 10);
+  if (m < 1 || m > 12 || d < 1 || d > 31) return false;
+  if (y < 1990 || y > 2099) return false;
+  const date = new Date(y, m - 1, d);
+  return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d;
+}
+
+function matchDate(text) {
+  // ISO format: YYYY-MM-DD or YYYY/MM/DD
+  const isoMatches = [...text.matchAll(/\b(\d{4})[-/](\d{2})[-/](\d{2})\b/g)];
+  for (const m of isoMatches) {
+    if (isValidDate(m[1], m[2], m[3])) {
+      return `${m[1]}-${m[2]}-${m[3]}`;
+    }
+  }
+
+  // DD-MM-YYYY or DD/MM/YYYY
+  const dmyMatches = [...text.matchAll(/\b(\d{1,2})[/-](\d{1,2})[/-](\d{4})\b/g)];
+  for (const m of dmyMatches) {
+    const day = m[1].padStart(2, '0');
+    const month = m[2].padStart(2, '0');
+    if (isValidDate(m[3], month, day)) {
+      return `${m[3]}-${month}-${day}`;
+    }
+  }
+
+  // Month name format: "April 2021", "17 April 2021", etc.
+  const monthName = text.match(
+    /\b(\d{1,2})?\s*(?:st|nd|rd|th)?\s*(January|February|March|April|May|June|July|August|September|October|November|December)[,\s]+(\d{4})\b/i
+  );
+  if (monthName) {
+    const months = { january: '01', february: '02', march: '03', april: '04', may: '05', june: '06',
+      july: '07', august: '08', september: '09', october: '10', november: '11', december: '12' };
+    const mo = months[monthName[2].toLowerCase()];
+    const dy = (monthName[1] || '01').padStart(2, '0');
+    const yr = monthName[3];
+    if (isValidDate(yr, mo, dy)) return `${yr}-${mo}-${dy}`;
+  }
+
+  return '';
 }
 
 function inferCurrency(text) {
-  if (/\u20B9|INR/i.test(text)) return 'INR';
-  if (/\$|USD/i.test(text)) return 'USD';
-  if (/AED/i.test(text)) return 'AED';
-  if (/SAR/i.test(text)) return 'SAR';
+  if (/[\u20B9₹]|(?:^|\s)INR(?:\s|$)/i.test(text)) return 'INR';
+  if (/(?:^|\s)Rs\.?\s*\d/i.test(text)) return 'INR';
+  if (/\$\s*\d|(?:^|\s)USD(?:\s|$)/i.test(text)) return 'USD';
+  if (/(?:^|\s)AED(?:\s|$)/i.test(text)) return 'AED';
+  // SAR must appear as a standalone currency marker, not inside words
+  if (/(?:^|\s)SAR\s*\d|(?:^|\s)SAR(?:\s|$)/i.test(text)) return 'SAR';
   return 'INR';
 }
 
@@ -199,7 +297,9 @@ function inferProjectType(text) {
 }
 
 function summarizeText(text) {
-  const normalized = text
+  // Use only the first ~2000 chars (first page area) to avoid technical specs
+  const firstPage = text.slice(0, 2000);
+  const normalized = firstPage
     .replace(/\s+/g, ' ')
     .replace(/Page\s+\d+\s+of\s+\d+/gi, '')
     .trim();
@@ -207,9 +307,14 @@ function summarizeText(text) {
   if (!normalized) return '';
   const sentences = normalized
     .split(/(?<=[.?!])\s+/)
-    .filter((line) => line.length > 40 && line.length < 220);
+    .filter((line) => {
+      if (line.length < 30 || line.length > 250) return false;
+      // Skip technical spec lines
+      if (/(?:should\s+(?:be|have)|must\s+(?:be|have|consist)|shall\s+(?:be|have)|mm\s+of\s+Hg|vacuum\s+level)/i.test(line)) return false;
+      return true;
+    });
 
-  return sanitize(sentences.slice(0, 2).join(' '));
+  return sanitize(sentences.slice(0, 3).join(' '));
 }
 
 async function loadPdfJs() {

@@ -2,27 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── FlyyyAI Clean White Theme ──────────────────────────────── */
+/* ── FlyyyAI Design System ────────────────────────────────── */
 
 @layer base {
   :root {
-    --bg-primary: #f8fafc;
+    --bg-primary: #F8FAFB;
     --bg-secondary: #ffffff;
     --bg-card: #ffffff;
-    --border: #e2e8f0;
+    --border: #E5E7EB;
     --border-hover: #cbd5e1;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --accent: #2563eb;
-    --accent-light: #3b82f6;
-    --success: #059669;
-    --danger: #dc2626;
-    --warning: #d97706;
+    --text-primary: #111827;
+    --text-secondary: #374151;
+    --text-muted: #6B7280;
+    --accent: #16A34A;
+    --accent-light: #22c55e;
+    --accent-hover: #15803d;
+    --teal: #0D9488;
+    --blue-soft: #E3E8FF;
+    --ice: #EAF6FF;
+    --success: #16A34A;
+    --danger: #DC2626;
+    --warning: #D97706;
   }
 
   body {
-    font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: var(--bg-primary);
@@ -51,15 +55,15 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   }
 
-  /* Primary button */
+  /* Primary button — green */
   .btn-primary {
     @apply px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200;
-    background: #2563eb;
+    background: #16A34A;
     color: #ffffff;
   }
   .btn-primary:hover {
-    background: #1d4ed8;
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    background: #15803d;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
   }
   .btn-primary:disabled {
     opacity: 0.5;
@@ -69,8 +73,8 @@
 
   .btn-secondary {
     @apply px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200;
-    color: #475569;
-    border: 1px solid #e2e8f0;
+    color: #374151;
+    border: 1px solid #E5E7EB;
     background: #ffffff;
   }
   .btn-secondary:hover {
@@ -87,14 +91,14 @@
   .input-field {
     @apply w-full px-4 py-2.5 rounded-lg text-sm transition-all duration-200;
     background: #ffffff;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #E5E7EB;
     color: var(--text-primary);
   }
-  .input-field::placeholder { color: #94a3b8; }
+  .input-field::placeholder { color: #6B7280; }
   .input-field:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: #16A34A;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
   }
 
   /* Stat number */
@@ -109,16 +113,16 @@
   .btn-accent { @apply btn-primary; }
   .input-dark { @apply input-field; }
   .text-gradient {
-    color: #2563eb;
+    color: #16A34A;
   }
 }
 
 /* ── Selection ─────────────────────────────────────────────── */
-::selection { background: rgba(37, 99, 235, 0.15); color: #1e3a5f; }
+::selection { background: rgba(22, 163, 74, 0.15); color: #14532d; }
 
 /* ── Focus ring ────────────────────────────────────────────── */
 *:focus-visible {
-  outline: 2px solid rgba(37, 99, 235, 0.5);
+  outline: 2px solid rgba(22, 163, 74, 0.5);
   outline-offset: 2px;
   border-radius: 8px;
 }
@@ -176,4 +180,39 @@ html { scroll-behavior: smooth; }
 .glass {
   backdrop-filter: blur(12px) saturate(160%);
   background: rgba(255, 255, 255, 0.8);
+}
+
+/* ── GSAP-friendly styles ──────────────────────────────────── */
+
+/* Cards with 3D tilt need perspective context */
+.gsap-card, .gsap-item {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* Smooth GPU-accelerated transforms */
+.gsap-panel {
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+/* Interactive button glow on hover (GSAP-driven elements) */
+.gsap-glow:hover {
+  filter: drop-shadow(0 0 12px rgba(22, 163, 74, 0.25));
+}
+
+/* Gradient text shimmer for headings */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gsap-gradient-text {
+  background: linear-gradient(135deg, #16A34A, #0D9488, #16A34A);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 4s ease-in-out infinite;
 }

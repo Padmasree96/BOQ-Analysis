@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { Building2, Mail, Lock, User, Briefcase, Phone, BadgeCheck, Loader2, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -114,17 +116,38 @@ export default function SignupPage() {
   };
 
   const displayError = error || authError;
+  const containerRef = useRef(null);
+  const bgOrb1Ref = useRef(null);
+  const bgOrb2Ref = useRef(null);
+  const formRef = useRef(null);
+
+  // GSAP: Floating orbs + form field stagger
+  useGSAP(() => {
+    gsap.to(bgOrb1Ref.current, {
+      x: 25, y: -15, scale: 1.06, duration: 7, repeat: -1, yoyo: true, ease: 'sine.inOut',
+    });
+    gsap.to(bgOrb2Ref.current, {
+      x: -20, y: 12, scale: 0.96, duration: 9, repeat: -1, yoyo: true, ease: 'sine.inOut',
+    });
+    if (formRef.current) {
+      gsap.fromTo(formRef.current.querySelectorAll('.gsap-signup-field'),
+        { opacity: 0, y: 18, scale: 0.97 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.07, ease: 'back.out(1.4)', delay: 0.2 }
+      );
+    }
+  }, { scope: containerRef });
 
   return (
     <motion.div
+      ref={containerRef}
       variants={pageVariants}
       initial="initial"
       animate="animate"
       exit="exit"
       className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/30 flex items-center justify-center px-4 py-12 relative overflow-hidden"
     >
-      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-blue-100/40 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] rounded-full bg-indigo-100/30 blur-3xl pointer-events-none" />
+      <div ref={bgOrb1Ref} className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-blue-100/40 blur-3xl pointer-events-none" />
+      <div ref={bgOrb2Ref} className="absolute -bottom-32 -left-32 w-[500px] h-[500px] rounded-full bg-indigo-100/30 blur-3xl pointer-events-none" />
 
       <motion.div
         variants={scaleInVariants}
@@ -147,8 +170,8 @@ export default function SignupPage() {
           </div>
         </div>
 
-        <motion.div layoutId="auth-card" className="bg-white/80 backdrop-blur-xl rounded-2xl border border-white/60 shadow-xl shadow-blue-100/20 p-8">
-          <div className="mb-6">
+        <motion.div ref={formRef} layoutId="auth-card" className="bg-white/80 backdrop-blur-xl rounded-2xl border border-white/60 shadow-xl shadow-blue-100/20 p-8">
+          <div className="mb-6 gsap-signup-field">
             <h3 className="text-lg font-bold text-slate-900">Create your account</h3>
             <p className="text-sm text-slate-400 mt-1">
               Get started with FlyyyAI in 30 seconds.
@@ -158,7 +181,7 @@ export default function SignupPage() {
           <motion.button
             {...subtleButtonMotion}
             onClick={handleGoogle}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-sm font-medium text-slate-700 transition-colors mb-6"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-sm font-medium text-slate-700 transition-colors mb-6 gsap-signup-field"
           >
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
@@ -177,27 +200,37 @@ export default function SignupPage() {
 
           {/* Signup Form */}
           <form onSubmit={handleSignup} className="flex flex-col gap-4">
-            <Field label="Full Name" value={fullName} onChange={setFullName}
-              placeholder="Dinesh Kumar" icon={User} error={formErr.fullName} autoComplete="name" />
+            <div className="gsap-signup-field">
+              <Field label="Full Name" value={fullName} onChange={setFullName}
+                placeholder="Dinesh Kumar" icon={User} error={formErr.fullName} autoComplete="name" />
+            </div>
 
-            <Field label="Email Address" type="email" value={email} onChange={setEmail}
-              placeholder="engineer@company.com" icon={Mail} error={formErr.email} autoComplete="email" />
+            <div className="gsap-signup-field">
+              <Field label="Email Address" type="email" value={email} onChange={setEmail}
+                placeholder="engineer@company.com" icon={Mail} error={formErr.email} autoComplete="email" />
+            </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 gsap-signup-field">
               <Field label="Phone" value={phone} onChange={setPhone}
                 placeholder="+91 98765 43210" icon={Phone} autoComplete="tel" />
               <Field label="Company" value={company} onChange={setCompany}
                 placeholder="ABC Construction" icon={Briefcase} autoComplete="organization" />
             </div>
 
-            <Field label="Designation" value={designation} onChange={setDesignation}
-              placeholder="Site Engineer" icon={BadgeCheck} autoComplete="organization-title" />
+            <div className="gsap-signup-field">
+              <Field label="Designation" value={designation} onChange={setDesignation}
+                placeholder="Site Engineer" icon={BadgeCheck} autoComplete="organization-title" />
+            </div>
 
-            <Field label="Password" type="password" value={password} onChange={setPassword}
-              placeholder="Min 6 characters" icon={Lock} error={formErr.password} autoComplete="new-password" />
+            <div className="gsap-signup-field">
+              <Field label="Password" type="password" value={password} onChange={setPassword}
+                placeholder="Min 6 characters" icon={Lock} error={formErr.password} autoComplete="new-password" />
+            </div>
 
-            <Field label="Confirm Password" type="password" value={confirm} onChange={setConfirm}
-              placeholder="Repeat password" icon={Lock} error={formErr.confirm} autoComplete="new-password" />
+            <div className="gsap-signup-field">
+              <Field label="Confirm Password" type="password" value={confirm} onChange={setConfirm}
+                placeholder="Repeat password" icon={Lock} error={formErr.confirm} autoComplete="new-password" />
+            </div>
 
             <AnimatePresence mode="wait">
               {displayError && (

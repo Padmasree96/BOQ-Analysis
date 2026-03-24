@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Upload } from 'lucide-react';
 import Header from '../components/Header';
 import UploadZone from '../components/UploadZone';
 import ResultsDashboard from '../components/ResultsDashboard';
@@ -10,6 +11,7 @@ import ComparisonPanel from '../components/ComparisonPanel';
 import VendorMailPanel from '../components/VendorMailPanel';
 import BoqService from '../services/BoqService';
 import { useAuth } from '../context/AuthContext';
+import { useSessionState, clearAllExtractionData } from '../hooks/usePersistedExtraction';
 import {
   buttonMotion,
   motionEase,
@@ -22,16 +24,20 @@ export default function DashboardPage() {
   const { user } = useAuth();
 
   const [loading, setLoading] = useState(false);
-  const [boqResults, setBoqResults] = useState(null);
+  const [boqResults, setBoqResults, clearBoqResults] = useSessionState('dash.boqResults', null);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState(null);
-  const [analyticsData, setAnalyticsData] = useState(null);
-  const [riskData, setRiskData] = useState(null);
-  const [boqFile, setBoqFile] = useState(null);
-  const [cadData, setCadData] = useState(null);
-  const [cadFile, setCadFile] = useState(null);
+  const [analyticsData, setAnalyticsData, clearAnalytics] = useSessionState('dash.analytics', null);
+  const [riskData, setRiskData, clearRisk] = useSessionState('dash.risk', null);
+  const [boqFileName, setBoqFileName, clearBoqFileName] = useSessionState('dash.boqFileName', null);
+  const [cadData, setCadData, clearCadData] = useSessionState('dash.cadData', null);
+  const [cadFileName, setCadFileName, clearCadFileName] = useSessionState('dash.cadFileName', null);
   const [compResult, setCompResult] = useState(null);
-  const [pageView, setPageView] = useState('upload');
+  const [pageView, setPageView] = useSessionState('dash.pageView', 'upload');
+
+  // File objects can't be serialized — keep them in regular state
+  const [boqFile, setBoqFile] = useState(null);
+  const [cadFile, setCadFile] = useState(null);
 
   const handleBoqUpload = async (file) => {
     setLoading(true);
@@ -41,8 +47,10 @@ export default function DashboardPage() {
     setRiskData(null);
     setActiveCategory(null);
     setBoqFile(file);
+    setBoqFileName(file.name);
     setCadData(null);
     setCadFile(null);
+    setCadFileName(null);
     setCompResult(null);
 
     try {
@@ -68,14 +76,17 @@ export default function DashboardPage() {
   };
 
   const handleReset = () => {
+    clearAllExtractionData();
     setBoqResults(null);
     setError(null);
     setActiveCategory(null);
     setAnalyticsData(null);
     setRiskData(null);
     setBoqFile(null);
+    setBoqFileName(null);
     setCadData(null);
     setCadFile(null);
+    setCadFileName(null);
     setCompResult(null);
     setPageView('upload');
   };
@@ -83,6 +94,7 @@ export default function DashboardPage() {
   const handleCadExtracted = (data, file) => {
     setCadData(data);
     setCadFile(file);
+    setCadFileName(file?.name || null);
   };
 
   const handleGoToCompare = () => setPageView('compare');
@@ -151,7 +163,7 @@ export default function DashboardPage() {
                       </span>
                     )}
                   </p>
-                  {boqFile && <p className="text-sm text-slate-400 mt-0.5">{boqFile.name}</p>}
+                  {(boqFile?.name || boqFileName) && <p className="text-sm text-slate-400 mt-0.5">{boqFile?.name || boqFileName}</p>}
                 </div>
 
                 <div className="flex items-center gap-1 p-1.5 rounded-xl bg-slate-100">
@@ -195,9 +207,9 @@ export default function DashboardPage() {
                 <motion.button
                   {...subtleButtonMotion}
                   onClick={handleReset}
-                  className="text-sm font-medium text-blue-600 hover:underline"
+                  className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors"
                 >
-                  New File
+                  <Upload size={14} /> New Upload
                 </motion.button>
               </motion.div>
 
@@ -273,9 +285,9 @@ export default function DashboardPage() {
                     <ComparisonPanel
                       boqItems={allItems}
                       cadItems={cadData?.items || []}
-                      cadFilename={cadFile?.name || 'Drawing.dwg'}
-                      projectName={boqFile?.name?.replace(/\.(xlsx|xls)$/, '') || 'Construction Project'}
-                      boqFilename={boqFile?.name || 'BOQ.xlsx'}
+                      cadFilename={cadFile?.name || cadFileName || 'Drawing.dwg'}
+                      projectName={(boqFile?.name || boqFileName || 'BOQ.xlsx').replace(/\.(xlsx|xls)$/, '') || 'Construction Project'}
+                      boqFilename={boqFile?.name || boqFileName || 'BOQ.xlsx'}
                       currentUser={user}
                       onApproved={() => setPageView('vendors')}
                       onNeedsReview={(result) => setCompResult(result)}
@@ -293,7 +305,7 @@ export default function DashboardPage() {
                   >
                     <VendorMailPanel
                       items={allItems}
-                      projectName={boqFile?.name?.replace(/\.(xlsx|xls)$/, '') || 'Construction Project'}
+                      projectName={(boqFile?.name || boqFileName || 'BOQ.xlsx').replace(/\.(xlsx|xls)$/, '') || 'Construction Project'}
                       userId={user?.id}
                       currentUser={user}
                     />
