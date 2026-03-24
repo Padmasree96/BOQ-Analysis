@@ -1,4 +1,7 @@
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import {
   FileSpreadsheet, Layers, Package, TrendingUp
 } from 'lucide-react';
@@ -37,6 +40,27 @@ const CleanTooltip = ({ active, payload, label }) => {
 };
 
 export default function ResultsDashboard({ results, analyticsData, riskData }) {
+  const dashContainerRef = useRef(null);
+
+  // GSAP: Stagger stat cards and charts
+  useGSAP(() => {
+    if (!dashContainerRef.current) return;
+    const cards = dashContainerRef.current.querySelectorAll('.gsap-stat-card');
+    if (cards.length) {
+      gsap.fromTo(cards,
+        { opacity: 0, y: 25, scale: 0.95, rotateY: 4, transformPerspective: 800 },
+        { opacity: 1, y: 0, scale: 1, rotateY: 0, duration: 0.6, stagger: 0.1, ease: 'back.out(1.4)' }
+      );
+    }
+    const charts = dashContainerRef.current.querySelectorAll('.gsap-chart');
+    if (charts.length) {
+      gsap.fromTo(charts,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out', delay: 0.3 }
+      );
+    }
+  }, { scope: dashContainerRef });
+
   if (!results) return null;
 
   const { total_sheets, sheets_with_data, extracted_items, categories } = results;
@@ -58,6 +82,7 @@ export default function ResultsDashboard({ results, analyticsData, riskData }) {
 
   return (
     <motion.div
+      ref={dashContainerRef}
       variants={panelVariants}
       initial="initial"
       animate="animate"
@@ -80,7 +105,7 @@ export default function ResultsDashboard({ results, analyticsData, riskData }) {
             variants={listItemVariants}
             initial="initial"
             animate="animate"
-            className="card p-6"
+            className="card p-6 gsap-chart"
           >
             <h3 className="text-xs font-semibold text-slate-400 tracking-wider mb-4 uppercase">Category Split</h3>
             <ResponsiveContainer width="100%" height={280}>
@@ -168,7 +193,7 @@ function StatCard({ icon: Icon, label, value, sub, color, delay = 0 }) {
       {...cardHoverMotion}
       variants={listItemVariants}
       transition={{ delay }}
-      className="card p-6"
+      className="card p-6 gsap-stat-card"
     >
       <div className="flex items-center gap-3 mb-3">
         <div className="rounded-lg p-2.5" style={{ background: color + '10' }}>

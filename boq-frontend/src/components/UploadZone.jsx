@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Upload, FileSpreadsheet, Loader2, AlertCircle, Zap } from 'lucide-react';
-import { useState, useId } from 'react';
+import { useState, useId, useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import {
   buttonMotion,
   notificationVariants,
@@ -11,6 +13,26 @@ export default function UploadZone({ onUpload, loading, error }) {
   const [file, setFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
   const inputId = useId();
+  const zoneRef = useRef(null);
+  const iconRef = useRef(null);
+
+  // GSAP: Floating upload icon
+  useGSAP(() => {
+    if (!iconRef.current) return;
+    gsap.to(iconRef.current, {
+      y: -8, duration: 1.5, repeat: -1, yoyo: true, ease: 'sine.inOut',
+    });
+  }, { scope: zoneRef });
+
+  // GSAP: Pulse effect on drag over
+  useEffect(() => {
+    if (!zoneRef.current) return;
+    if (dragOver) {
+      gsap.to(zoneRef.current, { scale: 1.02, boxShadow: '0 0 30px rgba(37, 99, 235, 0.15)', duration: 0.3, ease: 'power2.out' });
+    } else {
+      gsap.to(zoneRef.current, { scale: 1, boxShadow: '0 0 0 rgba(0,0,0,0)', duration: 0.3, ease: 'power2.out' });
+    }
+  }, [dragOver]);
 
   const handleFile = (f) => {
     if (f && (f.name.endsWith('.xlsx') || f.name.endsWith('.xls'))) setFile(f);
@@ -38,6 +60,7 @@ export default function UploadZone({ onUpload, loading, error }) {
 
       {/* The entire drop zone is a <label> — clicking anywhere opens the file picker natively */}
       <label
+        ref={zoneRef}
         htmlFor={inputId}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
@@ -46,9 +69,10 @@ export default function UploadZone({ onUpload, loading, error }) {
         style={{
           borderColor: dragOver ? '#2563eb' : '#e2e8f0',
           background: dragOver ? '#eff6ff' : undefined,
+          willChange: 'transform',
         }}
       >
-        <div className="mx-auto w-16 h-16 rounded-xl flex items-center justify-center mb-5 bg-blue-50">
+        <div ref={iconRef} className="mx-auto w-16 h-16 rounded-xl flex items-center justify-center mb-5 bg-blue-50">
           <Upload size={24} className="text-blue-600" />
         </div>
 

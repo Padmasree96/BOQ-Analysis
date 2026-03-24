@@ -1,5 +1,7 @@
-import { useState, useId } from 'react';
+import { useState, useId, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import {
   AlertTriangle,
   ArrowRight,
@@ -26,6 +28,23 @@ function CadUploadZone({ onFile, loading }) {
   const [dragging, setDragging] = useState(false);
   const [picked, setPicked] = useState(null);
   const inputId = useId();
+  const cadIconRef = useRef(null);
+  const cadZoneRef = useRef(null);
+
+  // GSAP: Floating icon + drag pulse
+  useGSAP(() => {
+    if (!cadIconRef.current) return;
+    gsap.to(cadIconRef.current, { y: -6, duration: 1.8, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  }, { scope: cadZoneRef });
+
+  useEffect(() => {
+    if (!cadZoneRef.current) return;
+    if (dragging) {
+      gsap.to(cadZoneRef.current, { scale: 1.02, boxShadow: '0 0 25px rgba(139, 92, 246, 0.15)', duration: 0.25, ease: 'power2.out' });
+    } else {
+      gsap.to(cadZoneRef.current, { scale: 1, boxShadow: '0 0 0 rgba(0,0,0,0)', duration: 0.25, ease: 'power2.out' });
+    }
+  }, [dragging]);
 
   const handlePick = (file) => {
     if (file) setPicked(file);
@@ -60,6 +79,7 @@ function CadUploadZone({ onFile, loading }) {
         </div>
       ) : !picked ? (
         <label
+          ref={cadZoneRef}
           htmlFor={inputId}
           onDragOver={(event) => { event.preventDefault(); setDragging(true); }}
           onDragLeave={() => setDragging(false)}
@@ -72,9 +92,10 @@ function CadUploadZone({ onFile, loading }) {
           style={{
             borderColor: dragging ? '#7c3aed' : '#e2e8f0',
             background: dragging ? '#faf5ff' : undefined,
+            willChange: 'transform',
           }}
         >
-          <div className="mx-auto w-20 h-20 rounded-2xl flex items-center justify-center mb-6 bg-violet-50">
+          <div ref={cadIconRef} className="mx-auto w-20 h-20 rounded-2xl flex items-center justify-center mb-6 bg-violet-50">
             <Upload size={32} className="text-violet-600" />
           </div>
           <p className="text-xl font-semibold text-slate-800 mb-2">Upload CAD Drawing</p>

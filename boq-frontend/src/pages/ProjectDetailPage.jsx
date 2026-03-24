@@ -15,6 +15,7 @@ import CadExtractPanel from '../components/CadExtractPanel';
 import ComparisonPanel from '../components/ComparisonPanel';
 import VendorMailPanel from '../components/VendorMailPanel';
 import { normalizeProjectRecord } from '../lib/projectRecord';
+import { useSessionState } from '../hooks/usePersistedExtraction';
 
 const TABS = [
   { id: 'boq', label: 'BOQ Extraction', icon: FileSpreadsheet },
@@ -32,9 +33,9 @@ export default function ProjectDetailPage() {
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('boq');
 
-  // BOQ extraction state
-  const [boqResult, setBoqResult] = useState(null);
-  const [cadResult, setCadResult] = useState(null);
+  // BOQ extraction state — persisted to sessionStorage per project
+  const [boqResult, setBoqResult, clearBoqResult] = useSessionState(`proj.${id}.boqResult`, null);
+  const [cadResult, setCadResult, clearCadResult] = useSessionState(`proj.${id}.cadResult`, null);
   const [cadFile, setCadFile] = useState(null);
   const [activeCategory, setActiveCategory] = useState(null);
   const [extracting, setExtracting] = useState(false);
@@ -215,7 +216,7 @@ export default function ProjectDetailPage() {
                     />
                   </div>
                 </div>
-                <button onClick={() => { setBoqResult(null); setActiveCategory(null); }}
+                <button onClick={() => { clearBoqResult(); clearCadResult(); setActiveCategory(null); setCadFile(null); }}
                   className="flex items-center gap-2 px-4 py-2 text-sm text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200">
                   <Upload size={14} /> Upload New BOQ
                 </button>

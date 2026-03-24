@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import gsap from 'gsap';
 import { User, Bell, Shield, Users, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '../supabaseClient';
@@ -259,6 +260,29 @@ function SmtpTab({ user }) {
 export default function SettingsPage() {
   const { user } = useAuth();
   const [tab, setTab] = useState('profile');
+  const contentRef = useRef(null);
+  const navRef = useRef(null);
+
+  // GSAP: Animate tab content on switch
+  const animateContent = useCallback(() => {
+    if (!contentRef.current) return;
+    gsap.fromTo(contentRef.current,
+      { opacity: 0, y: 15, scale: 0.98 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(1.2)' }
+    );
+  }, []);
+
+  useEffect(() => { animateContent(); }, [tab, animateContent]);
+
+  // GSAP: Nav items stagger on mount
+  useEffect(() => {
+    if (!navRef.current) return;
+    const items = navRef.current.querySelectorAll('button');
+    gsap.fromTo(items,
+      { opacity: 0, x: -10 },
+      { opacity: 1, x: 0, duration: 0.35, stagger: 0.06, ease: 'power3.out' }
+    );
+  }, []);
 
   return (
     <Layout>
@@ -267,7 +291,7 @@ export default function SettingsPage() {
         <div className="flex gap-6">
           {/* Sidebar */}
           <div className="hidden md:block w-48 flex-shrink-0">
-            <nav className="space-y-1">
+            <nav ref={navRef} className="space-y-1">
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition ${
@@ -290,7 +314,7 @@ export default function SettingsPage() {
           </div>
 
           {/* Content */}
-          <div className="flex-1 bg-white rounded-2xl border border-slate-100 p-6">
+          <div ref={contentRef} className="flex-1 bg-white rounded-2xl border border-slate-100 p-6">
             {tab === 'profile' && <ProfileTab user={user} />}
             {tab === 'notifications' && <NotificationsTab />}
             {tab === 'security' && <SecurityTab />}
