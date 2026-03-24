@@ -1,29 +1,19 @@
 """
 cad_parser.py — v5  MAXIMUM EXTRACTION, NO DEDUPLICATION
-
-Adapted from backend/cad_parser.py for the BOQ-Analysis app.
-
-KEY DESIGN:
-  - Collects EVERY entity from EVERY layout separately → 476+ raw items
-  - NO deduplication at parser level — that's done by boq_engine.consolidate_items()
-  - Returns full list + combined_text for AI
-
-FLOW:
-  1. Scan modelspace for geometry (LINE/POLYLINE/ARC lengths)
-  2. Count block INSERT instances per layout (for quantity multiplication)
-  3. Scan EVERY space: modelspace + each layout + each block def
-  4. Collect raw text items — NO deduplication at parser level
-  5. Return full list + combined_text for AI
 """
 
 import ezdxf
 import math
 import re
-from typing import Any
+from typing import Any, List, Dict, Optional
 from collections import defaultdict
 
-from app.services.cad_text_cleaner import clean_cad_text
-from app.services.cad_layer_classifier import classify_layer
+try:
+    from app.services.cad_text_cleaner import clean_cad_text
+    from app.services.cad_layer_classifier import classify_layer
+except ImportError:
+    from cad_text_cleaner import clean_cad_text
+    from cad_layer_classifier import classify_layer
 
 
 # ══ NOISE FILTER ═════════════════════════════════════════════════════════════
@@ -152,7 +142,7 @@ def _infer_unit(text: str) -> str:
     return "nos"
 
 _ACTION_RE = re.compile(
-    r"^(providing\s+and\s+fixing|providing\s+\&\s+fixing|"
+    r"^(providing\s+and\s+fixing|providing\s+&\s+fixing|"
     r"supply\s+and\s+(install|installation)|s/i\s+of|p/f\s+of|"
     r"installation\s+of|supply\s+of|providing|fixing|laying|"
     r"erection\s+of|furnishing\s+and\s+fixing)\s+",
@@ -199,7 +189,7 @@ def _classify(text: str) -> str:
 
 
 # ══ MAIN ENTRY POINT ══════════════════════════════════════════════════════════
-def parse_dxf(path: str) -> dict[str, Any]:
+def parse_dxf(path: str) -> Dict[str, Any]:
     doc   = ezdxf.readfile(path)
     msp   = doc.modelspace()
     units = doc.header.get("$INSUNITS", 4)
@@ -215,10 +205,9 @@ def parse_dxf(path: str) -> dict[str, Any]:
     entity_stats: dict = {}
 
     # KEY: raw list — NO deduplication at parser level
-    # Every entity from every layout is a separate item
-    texts: list[dict] = []
-    blocks_with_attribs: list[dict] = []
-    all_text_parts: list[str] = []
+    texts: List[Dict] = []
+    blocks_with_attribs: List[Dict] = []
+    all_text_parts: List[str] = []
 
     DOOR_P  = ["door","dr","d-","entrance"]
     WIN_P   = ["window","win","w-","wd"]
@@ -236,7 +225,6 @@ def parse_dxf(path: str) -> dict[str, Any]:
             }
 
     def _add_text(raw: str, layer: str, source: str, etype: str, mult: int = 1):
-        """Add every valid text entity — do NOT deduplicate here."""
         cleaned = clean_cad_text(str(raw or "")).strip()
         if not cleaned or len(cleaned) < 3: return
         if _is_noise(cleaned): return
@@ -244,7 +232,6 @@ def parse_dxf(path: str) -> dict[str, Any]:
         _ensure_layer(layer)
         cat = _classify(cleaned) or layer_summary[layer]["category"]
         
-        # Add context for AI: if in a block, mention block name and instance count
         ctx = f"{cat}/{layer}"
         if source.startswith("blockdef:"):
             bname = source[len("blockdef:"):]
@@ -252,14 +239,12 @@ def parse_dxf(path: str) -> dict[str, Any]:
         
         all_text_parts.append(f"[{ctx}] {cleaned}")
 
-        # Local fallback only: if it doesn't have a hint, we don't put it in texts list
         if not _has_hint(cleaned): return
 
         cname = _clean_name(cleaned)
         if not cname or len(cname) < 3: return
         qty, unit = _extract_qty(cleaned)
         
-        # When extracting from a block definition, qty = instances × item qty
         if source.startswith("blockdef:") and mult > 1:
             qty = mult if qty == 0 else qty * mult
 
@@ -275,7 +260,7 @@ def parse_dxf(path: str) -> dict[str, Any]:
         })
         layer_summary[layer]["text_count"] += 1
 
-    # ── GEOMETRY (modelspace only) ─────────────────────────────────────────
+    # ── GEOMETRY ─────────────────────────────────────────────────────────
     for e in msp.query("LINE"):
         x1,y1 = e.dxf.start.x, e.dxf.start.y
         x2,y2 = e.dxf.end.x, e.dxf.end.y
@@ -311,8 +296,6 @@ def parse_dxf(path: str) -> dict[str, Any]:
             layer_summary[layer]["polyline_length"]+=perim
         except Exception: continue
 
-    # ── COUNT INSERT INSTANCES PER BLOCK ─────────────────────────────
-    # This is critical for accurate quantities in block-based drawings
     block_instance_count: dict[str, int] = defaultdict(int)
     spaces_for_count = [("modelspace", msp)]
     for layout in doc.layouts:
@@ -327,8 +310,6 @@ def parse_dxf(path: str) -> dict[str, Any]:
                     block_instance_count[bname] += 1
             except: continue
 
-    # ── ALL SPACES: modelspace + ALL layouts + ALL block definitions ────────
-    # This is what gives 476+ items — scanning every layout separately
     spaces = [("modelspace", msp)]
     for layout in doc.layouts:
         if layout.name.lower() != "model":
@@ -340,8 +321,6 @@ def parse_dxf(path: str) -> dict[str, Any]:
 
     for space_label, space in spaces:
         is_msp = (space_label == "modelspace")
-        
-        # Instance multiplier for block definitions
         instance_mult = 1
         if space_label.startswith("blockdef:"):
             bname = space_label[len("blockdef:"):]
@@ -356,29 +335,24 @@ def parse_dxf(path: str) -> dict[str, Any]:
 
                 if etype == "TEXT":
                     _add_text(e.dxf.text or "", layer, space_label, "TEXT", mult=instance_mult)
-
                 elif etype == "MTEXT":
                     try:    raw = e.plain_mtext()
                     except: raw = getattr(e,"text","") or ""
                     _add_text(raw, layer, space_label, "MTEXT", mult=instance_mult)
-
                 elif etype == "ATTRIB":
                     tag = getattr(e.dxf,"tag","")
                     val = e.dxf.text or ""
                     _add_text(f"{tag}: {val}" if tag else val, layer, space_label, "ATTRIB", mult=instance_mult)
-
                 elif etype == "ATTDEF":
                     val = e.dxf.text or ""
                     if val.lower() not in ("","-","?","x","tbd","none"):
                         tag = getattr(e.dxf,"tag","")
                         _add_text(f"{tag}: {val}" if tag else val, layer, space_label, "ATTDEF", mult=instance_mult)
-
                 elif etype == "MULTILEADER":
                     try:
                         content = e.context.mtext.default_content
                         _add_text(clean_cad_text(content), layer, space_label, "MULTILEADER", mult=instance_mult)
                     except: pass
-
                 elif etype == "ACAD_TABLE":
                     try:
                         for row in range(e.dxf.rows):
@@ -388,7 +362,6 @@ def parse_dxf(path: str) -> dict[str, Any]:
                                     _add_text(val, layer, space_label, "TABLE_CELL", mult=instance_mult)
                                 except: pass
                     except: pass
-
                 elif etype == "INSERT":
                     bname = e.dxf.name
                     if is_msp:
@@ -399,7 +372,6 @@ def parse_dxf(path: str) -> dict[str, Any]:
                         elif _match_pat(bname, FURN_P):  furniture_count+=1
                         else:                            other_block_count+=1
 
-                    # ATTRIB values on this specific INSERT instance
                     if hasattr(e, "attribs"):
                         attribs = []
                         for att in e.attribs:
@@ -449,7 +421,7 @@ def parse_dxf(path: str) -> dict[str, Any]:
         "furniture_count":             furniture_count,
         "other_block_count":           other_block_count,
         "lines":                       lines,
-        "texts":                       texts,          # ALL items, no dedup
+        "texts":                       texts,
         "blocks_with_attribs":         blocks_with_attribs,
         "dimensions":                  [],
         "layer_summary":               layer_summary,

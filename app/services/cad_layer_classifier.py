@@ -1,13 +1,9 @@
 """
 cad_layer_classifier.py  —  Map AutoCAD layer names to EPC categories.
-
-Rules checked top-to-bottom; first match wins.
-Firefighting is checked FIRST because fire pipe keywords overlap with Piping.
 """
 
 _RULES: list[tuple[list[str], str]] = [
-
-    # ── Firefighting — FIRST (overlaps with piping) ───────────────────────────
+    # ── Firefighting ───────────────────────────────────────────────────────────
     (["fp-","fp_","fire","sprink","sprk","sprnk","hydrant","hose",
       "fm200","novec","deluge","suppres","exting","smoke","alarm",
       "facp","detection","mcp-","fss-"],
@@ -62,9 +58,7 @@ _RULES: list[tuple[list[str], str]] = [
      "Telecom"),
 ]
 
-
 def classify_layer(layer_name: str) -> str:
-    """Return EPC category for a layer name. Returns 'General' if no rule matches."""
     if not layer_name:
         return "General"
     lower = layer_name.lower().strip()
@@ -73,11 +67,3 @@ def classify_layer(layer_name: str) -> str:
             if lower.startswith(pat) or pat in lower:
                 return category
     return "General"
-
-
-def classify_layers(names: list[str]) -> dict[str, str]:
-    return {n: classify_layer(n) for n in names}
-
-
-def get_categories() -> list[str]:
-    return [cat for _, cat in _RULES] + ["General"]
