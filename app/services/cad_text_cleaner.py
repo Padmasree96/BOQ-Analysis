@@ -1,13 +1,5 @@
 """
-cad_text_cleaner.py  —  Strip AutoCAD formatting codes from raw text strings.
-
-Handles:
-  %%P  →  ±   (plus-minus)
-  %%D  →  °   (degree)
-  %%C  →  ⌀   (diameter)
-  {\\fArial|b0|i0;...}  →  removed  (MTEXT font declarations)
-  \\P  \\p  \\~  \\l  \\L  →  removed  (MTEXT paragraph / control chars)
-  Hyperlink codes, field codes  →  removed
+cad_text_cleaner.py  —  Strip AutoCAD formatting codes.
 """
 
 import re
@@ -33,7 +25,6 @@ _MTEXT_RE = re.compile(
 _FIELD_RE = re.compile(r"%<[^>]*>%", re.IGNORECASE)
 _HYPER_RE = re.compile(r"HYPERLINK\s*\"[^\"]*\"\s*", re.IGNORECASE)
 _WS_RE    = re.compile(r"\s{2,}")
-
 
 def clean_cad_text(raw: str) -> str:
     if not raw:

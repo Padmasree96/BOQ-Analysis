@@ -11,10 +11,16 @@ from app.services.excel_analyzer import process_excel
 from app.services.category_classifier import classify_category
 from app.services.graph_matcher import graph_stats, learn_material
 from app.graphs.excel_graph import extract_with_ai
+from app.utils.product_normalizer import consolidate_duplicates
 from app.graphs.boq_langgraph import run_boq_extraction
 from app.analytics.boq_analyzer import analyze_boq
 from app.analytics.risk_engine import detect_risks
-from app.utils.product_normalizer import consolidate_duplicates
+
+# New CAD Imports
+from app.services.cad_parser import parse_dxf
+from app.services.boq_engine import consolidate_items, apply_layer_geometry, group_boq_by_category
+from app.services.cad_graph import generate_boq_with_ai
+from app.services.dwg_to_dxf import convert_dwg_to_dxf
 
 router = APIRouter()
 
@@ -868,8 +874,7 @@ async def extract_cad_file(
 ):
     """
     Extract material schedule from a CAD drawing file.
-    Uses 5-agent LangGraph pipeline: reader → reconstructor → embedder → extractor → aggregator.
-    Supports .dwg, .dxf, .pdf
+    Flow: DWG -> DXF -> Parse -> AI/Heuristic -> Consolidate -> Group.
     """
     ext = Path(file.filename).suffix.lower()
     if ext not in _ALLOWED_CAD_EXTS:
@@ -885,14 +890,62 @@ async def extract_cad_file(
             detail=f"File too large. Maximum allowed: {os.getenv('CAD_MAX_FILE_MB','50')} MB",
         )
 
+    # Save to temp file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
+        tmp.write(contents)
+        tmp_path = tmp.name
+
     try:
-        from app.graphs.cad_langgraph import run_cad_extraction
-        result = run_cad_extraction(contents, file.filename)
-        return result
+        # Step 1: Convert DWG to DXF if needed
+        dxf_path = tmp_path
+        if ext == ".dwg":
+            try:
+                dxf_path = convert_dwg_to_dxf(tmp_path)
+            except Exception as e:
+                logger.error(f"DWG conversion failed: {e}")
+                raise HTTPException(status_code=500, detail=f"DWG conversion failed. Use .dxf if possible.")
+
+        # Step 2: Parse DXF
+        raw_data = parse_dxf(dxf_path)
+
+        # Step 3: Extract BOQ (AI with Heuristic fallback)
+        boq_items = generate_boq_with_ai(raw_data)
+        source = "AI"
+        
+        if not boq_items:
+            # Fallback to heuristic
+            from app.services.boq_template import map_to_boq
+            boq_items = map_to_boq(raw_data)
+            source = "Heuristic"
+
+        # Step 4: Consolidate and Apply Geometry
+        consolidated = consolidate_items(boq_items)
+        # Apply layer geometry for items with 0 quantity
+        final_items = apply_layer_geometry(consolidated, raw_data.get("layer_summary", {}))
+        
+        # Step 5: Group by category
+        grouped = group_boq_by_category(final_items)
+
+        return {
+            "success": True,
+            "filename": file.filename,
+            "source": source,
+            "extracted_items": len(final_items),
+            "items": final_items,
+            "categories": grouped,
+            "stats": raw_data.get("extraction_stats"),
+        }
 
     except Exception as e:
         logger.error(f"[Route] CAD extraction failed: {e}")
         raise HTTPException(status_code=500, detail=f"CAD extraction failed: {str(e)}")
+    finally:
+        try:
+            os.unlink(tmp_path)
+            if ext == ".dwg" and 'dxf_path' in locals() and dxf_path != tmp_path:
+                os.unlink(dxf_path)
+        except PermissionError:
+            pass
 
 
 # ── POST /compare ─────────────────────────────────────────────────────────────
