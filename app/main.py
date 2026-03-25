@@ -38,6 +38,7 @@ async def root():
             "POST /extract",
             "POST /upload-excel",
             "POST /extract-langgraph",
+            "POST /extract-cad",
             "POST /analyze",
             "POST /risk",
             "GET /graph-stats",
