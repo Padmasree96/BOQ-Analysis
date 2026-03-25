@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -175,6 +175,13 @@ export default function ProjectsPage() {
   const [search, setSearch] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const vendorIdFromQuery = searchParams.get('vendorId');
+  const vendorIdFromState = location.state?.vendorId;
+  const vendorId = vendorIdFromQuery || vendorIdFromState;
+
+  console.log("Projects Page - vendorId found:", vendorId);
 
   const gridRef = useRef(null);
   const filters = ['all', 'active', 'draft', 'pending', 'closed', 'archived'];
@@ -242,7 +249,14 @@ export default function ProjectsPage() {
           <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map(p => (
               <ProjectCard key={p.id} project={p}
-                onClick={(id) => navigate(`/projects/${id}`)}
+                onClick={(id) => {
+                  console.log("Project clicked:", id, "with vendorId:", vendorId);
+                  if (vendorId) {
+                    navigate(`/projects/${id}?vendorId=${vendorId}`);
+                  } else {
+                    navigate(`/projects/${id}`);
+                  }
+                }}
                 onDuplicate={async (proj) => { await duplicateProject(proj); toast.success('Project duplicated'); }}
                 onArchive={async (proj) => { await updateProject(proj.id, { status: 'archived' }); toast.success('Project archived'); }}
                 onDelete={(proj) => setDeleteTarget(proj)} />

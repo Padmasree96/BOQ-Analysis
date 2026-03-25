@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { ArrowLeft, FileSpreadsheet, Layers, BarChart3, Users, Upload } from 'lucide-react';
 import gsap from 'gsap';
 import toast from 'react-hot-toast';
@@ -25,17 +25,24 @@ const TABS = [
 ];
 
 export default function ProjectDetailPage() {
-  const { id } = useParams();
+  const { projectId } = useParams();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const vendorIdFromQuery = searchParams.get('vendorId');
+  const vendorIdFromState = location.state?.vendorId;
+  const vendorIdFromRequest = vendorIdFromQuery || vendorIdFromState;
+
+  console.log("Project Detail Page - vendorId selected:", vendorIdFromRequest);
+
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState('boq');
+  const [tab, setTab] = useState(vendorIdFromRequest ? 'vendors' : 'boq');
 
   // BOQ extraction state — persisted to sessionStorage per project
-  const [boqResult, setBoqResult, clearBoqResult] = useSessionState(`proj.${id}.boqResult`, null);
-  const [cadResult, setCadResult, clearCadResult] = useSessionState(`proj.${id}.cadResult`, null);
+  const [boqResult, setBoqResult, clearBoqResult] = useSessionState(`proj.${projectId}.boqResult`, null);
+  const [cadResult, setCadResult, clearCadResult] = useSessionState(`proj.${projectId}.cadResult`, null);
   const [cadFile, setCadFile] = useState(null);
   const [activeCategory, setActiveCategory] = useState(null);
   const [extracting, setExtracting] = useState(false);
@@ -60,12 +67,12 @@ export default function ProjectDetailPage() {
 
   useEffect(() => {
     (async () => {
-      const { data, error } = await supabase.from('projects').select('*').eq('id', id).single();
+      const { data, error } = await supabase.from('projects').select('*').eq('id', projectId).single();
       if (error) { toast.error('Project not found'); navigate('/projects'); return; }
       setProject(normalizeProjectRecord(data));
       setLoading(false);
     })();
-  }, [id, navigate]);
+  }, [projectId, navigate]);
 
   const handleBoqUpload = useCallback(async (file) => {
     setExtracting(true);
@@ -149,7 +156,7 @@ export default function ProjectDetailPage() {
     };
   }, [boqResult, extracting, handleBoqUpload, project, searchParams, setSearchParams]);
 
-  if (loading) {
+  if (loading || !project) {
     return (
       <Layout>
         <div className="flex items-center justify-center h-64">
@@ -252,6 +259,7 @@ export default function ProjectDetailPage() {
             projectName={project?.project_name || 'Construction Project'}
             userId={user?.id}
             currentUser={user}
+            initialVendorId={vendorIdFromRequest}
           />
         )}
         </div>
