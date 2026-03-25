@@ -282,7 +282,7 @@ function StepHeader({ number, title, icon: Icon, count, isOpen, onToggle }) {
 // ── Main component ───────────────────────────────────────────────
 const EMPTY_ITEMS = [];
 
-export default function VendorMailPanel({ items, projectName = 'Construction Project', userId, currentUser = null }) {
+export default function VendorMailPanel({ items, projectName = 'Construction Project', userId, currentUser = null, initialVendorId = null }) {
   // Use stable reference for empty array to avoid infinite re-renders
   if (!items) items = EMPTY_ITEMS;
   const navigate = useNavigate();
@@ -392,10 +392,16 @@ export default function VendorMailPanel({ items, projectName = 'Construction Pro
         }));
         setVendors(mapped);
         setSecondsAgo(0);
+
+        // Auto-select initial vendor if provided
+        if (initialVendorId) {
+          setSelectedVendors(new Set([initialVendorId]));
+          setOpenStep(2); // Jump to vendor step
+        }
       })
       .catch(() => setVendors([]))
       .finally(() => setLoadingVendors(false));
-  }, [currentUser?.id, userId]);
+  }, [currentUser?.id, userId, initialVendorId]);
 
   // Initial load
   useEffect(() => {
@@ -478,6 +484,10 @@ export default function VendorMailPanel({ items, projectName = 'Construction Pro
     if (selectedItems.length === 0) { setError('Please select at least one material.'); return; }
     setSending(true); setError(''); setResult(null);
     try {
+      // Step 4: Log IDs for final integration
+      console.log("Vendor ID:", initialVendorId || Array.from(selectedVendors)[0]);
+      console.log("Project Path ID:", window.location.pathname.split('/').pop());
+
       const res = await boqService.sendVendorQuoteEmail({
         vendorEmails: allVendorEmails,
         materials: selectedItems,
